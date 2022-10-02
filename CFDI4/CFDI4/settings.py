@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = '$@8q38h^d$!$of$931pue6-9bku2g(8_-qic)_ck9wn1q9ksq#'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+
 
 ALLOWED_HOSTS = ['*']
 
@@ -84,18 +84,26 @@ WSGI_APPLICATION = 'CFDI4.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
+DEBUG = True
 if DEBUG:
     DATABASES = {
         'default': {
-            'ENGINE': 'sql_server.pyodbc',
+            # 'ENGINE': 'sql_server.pyodbc',
+            # 'NAME': 'CFDI4',
+            # 'USER': 'sa',
+            # 'PASSWORD': 'Soluciones28',
+            # 'HOST': 'ASJUA-WEB05\SQLEXPRESS',
+            # 'PORT': '',
+            # 'OPTIONS': {
+            #     'driver': 'SQL Server Native Client 11.0',
+            # },
+            'ENGINE': 'django.db.backends.mysql',
             'NAME': 'CFDI4',
-            'USER': 'sa',
-            'PASSWORD': 'Soluciones28',
-            'HOST': 'ASJUA-WEB05\SQLEXPRESS',
+            'USER': 'root',
+            'PASSWORD': 'root',
+            'HOST': '127.0.0.1',
             'PORT': '',
-            'OPTIONS': {
-                'driver': 'SQL Server Native Client 11.0',
-            },
+            'OPTIONS': {'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"},
         },
     }
 else:
@@ -146,12 +154,13 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
-STATICFILES_DIRS = [
-        BASE_DIR / 'static',
-        #BASE_DIR / 'posts' / 'static',
-        #BASE_DIR / 'profiles' / 'static',
-    ]
+if not DEBUG:
+    STATIC_ROOT = os.path.join(BASE_DIR, "static")
+    STATICFILES_DIRS = [
+            BASE_DIR / 'static',
+            #BASE_DIR / 'posts' / 'static',
+            #BASE_DIR / 'profiles' / 'static',
+        ]
 STATIC_URL = '/static/'
 
 
