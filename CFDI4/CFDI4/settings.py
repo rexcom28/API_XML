@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = '$@8q38h^d$!$of$931pue6-9bku2g(8_-qic)_ck9wn1q9ksq#'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -37,11 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+
     'rest_framework',
     'rest_framework.authtoken',
     'dj_rest_auth',
-    
+
     'Cats',
     'Facturas',
 ]
@@ -86,16 +86,16 @@ WSGI_APPLICATION = 'CFDI4.wsgi.application'
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 DATABASES = {
-    
+
         'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'cfdi4',
-        'USER': 'root',
-        'PASSWORD': 'root',
-        'HOST': '127.0.0.1',
+        'NAME': 'rexcom$cfdi4',
+        'USER': 'rexcom',
+        'PASSWORD': 'Nasus28@',
+        'HOST': 'rexcom.mysql.pythonanywhere-services.com',
         'PORT': '3306',
         'OPTIONS': {'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"},
-    
+
     }
     # 'default': {
     #     'ENGINE': 'sql_server.pyodbc',
@@ -108,7 +108,7 @@ DATABASES = {
     #         'driver': 'SQL Server Native Client 11.0',
     #     },
     # },
-}  
+}
 
 
 # Password validation
@@ -146,5 +146,12 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
-
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STATICFILES_DIRS = [
+        BASE_DIR / 'static',
+        #BASE_DIR / 'posts' / 'static',
+        #BASE_DIR / 'profiles' / 'static',
+    ]
 STATIC_URL = '/static/'
+
+
