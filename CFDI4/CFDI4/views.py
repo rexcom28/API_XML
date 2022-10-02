@@ -1,8 +1,10 @@
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login, logout
+from rest_framework import status
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
+from rest_framework import permissions
 from rest_framework.status import (
     HTTP_400_BAD_REQUEST,
     HTTP_404_NOT_FOUND,
@@ -10,6 +12,25 @@ from rest_framework.status import (
 )
 from rest_framework.response import Response
 
+from rest_framework import views
+from . import serializers
+
+class LoginView(views.APIView):
+# This view should be accessible also for unauthenticated users.
+    permission_classes = (permissions.AllowAny,)
+
+    def post(self, request, format=None):
+        
+        serializer = serializers.LoginSerializer(data=self.request.data,
+            context={ 'request': self.request })
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        login(request, user)
+        return Response({'res':'OK'}, status=status.HTTP_202_ACCEPTED)
+class LogoutView(views.APIView):
+    def post(self, request, format=None, *args, **kwargs):
+        logout(request)
+        return Response(None, status=status.HTTP_204_NO_CONTENT)
 
 @csrf_exempt
 @api_view(["POST"])
@@ -27,3 +48,4 @@ def login(request):
     token, _ = Token.objects.get_or_create(user=user)
     return Response({'token': token.key},
                     status=HTTP_200_OK)
+
