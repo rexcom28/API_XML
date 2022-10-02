@@ -26,10 +26,9 @@ class FormaPagoList(generics.ListAPIView):
         else:
             return super().get_queryset()
 class MonedasList(generics.ListAPIView):
-    #authentication_classes = [SessionAuthentication, TokenAuthentication]
-    #permission_classes = [IsAuthenticated]
-    
-    pagination_class = ExamplePagination #PageNumberPagination
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]    
+    pagination_class = ExamplePagination 
     queryset = CfdiMonedas.objects.all().order_by('monedaclave')
     serializer_class = cfdiMonedas_Serializer
     
@@ -41,8 +40,8 @@ class MonedasList(generics.ListAPIView):
 
 
 class PaisList(generics.ListAPIView):
-    #authentication_classes = [SessionAuthentication, TokenAuthentication]
-    #permission_classes = [IsAuthenticated]
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
     
     pagination_class = PageNumberPagination
     queryset = CfdiPais.objects.all().order_by('paisclave')
@@ -56,8 +55,8 @@ class PaisList(generics.ListAPIView):
 
 
 class ProductosServiciosList(generics.ListAPIView):
-    #authentication_classes = [SessionAuthentication, TokenAuthentication]
-    #permission_classes = [IsAuthenticated]
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
 
     pagination_class = ExamplePagination
     queryset = CfdiProductosServicios.objects.all().order_by('productoclave')
@@ -71,8 +70,8 @@ class ProductosServiciosList(generics.ListAPIView):
     
 
 class RegimenFiscalList(generics.ListAPIView):
-    #authentication_classes = [SessionAuthentication, TokenAuthentication]
-    #permission_classes = [IsAuthenticated]
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
     
     pagination_class = PageNumberPagination
     queryset = CfdiRegimenFiscal.objects.all().order_by('regimenfiscalclave')
@@ -86,8 +85,8 @@ class RegimenFiscalList(generics.ListAPIView):
     
 
 class TipoRelacionList(generics.ListAPIView):
-    #authentication_classes = [SessionAuthentication, TokenAuthentication]
-    #permission_classes = [IsAuthenticated]
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
     
     pagination_class = PageNumberPagination
     queryset = CfdiTipoRelacion.objects.all().order_by('tiporelacionclave')
@@ -101,8 +100,8 @@ class TipoRelacionList(generics.ListAPIView):
 
 
 class UsoList(generics.ListAPIView):
-    #authentication_classes = [SessionAuthentication, TokenAuthentication]
-    #permission_classes = [IsAuthenticated]
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
     
     pagination_class = PageNumberPagination
     queryset = CfdiUso.objects.all().order_by('usoclave')
@@ -116,8 +115,8 @@ class UsoList(generics.ListAPIView):
         
 
 class CodigoPostalList(generics.ListAPIView):
-    #authentication_classes = [SessionAuthentication, TokenAuthentication]
-    #permission_classes = [IsAuthenticated]
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
     
     pagination_class = PageNumberPagination
     queryset = CfdiCodigoPostal.objects.all().order_by('codigopostal')
@@ -131,8 +130,8 @@ class CodigoPostalList(generics.ListAPIView):
 
 
 class ColoniasList(generics.ListAPIView):
-    #authentication_classes = [SessionAuthentication, TokenAuthentication]
-    #permission_classes = [IsAuthenticated]
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
     
     pagination_class = PageNumberPagination
     queryset = CfdiColonia.objects.all().order_by('colonia')
@@ -146,8 +145,8 @@ class ColoniasList(generics.ListAPIView):
 
 
 class EstadosList(generics.ListAPIView):
-    #authentication_classes = [SessionAuthentication, TokenAuthentication]
-    #permission_classes = [IsAuthenticated]
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
     
     pagination_class = PageNumberPagination
     queryset = CfdiEstados.objects.all().order_by('estado')
@@ -160,9 +159,8 @@ class EstadosList(generics.ListAPIView):
             return super().get_queryset()
        
 class ClaveUnidadMedidaList(generics.ListAPIView):
-    #authentication_classes = [SessionAuthentication, TokenAuthentication]
-    #permission_classes = [IsAuthenticated]
-    #allowed_methods = ['GET', 'POST']
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
     pagination_class = PageNumberPagination
     queryset = CfdiClaveUnidadMedida.objects.all().order_by('unidadmedidaclave')
     serializer_class = CfdiClaveUnidadMedida_Serializer

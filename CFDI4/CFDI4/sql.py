@@ -1,4 +1,4 @@
-from ast import parse
+
 import pandas as pd
 import pyodbc
 import configparser
