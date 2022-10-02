@@ -84,9 +84,22 @@ WSGI_APPLICATION = 'CFDI4.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
-
-DATABASES = {
-
+if DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'sql_server.pyodbc',
+            'NAME': 'CFDI4',
+            'USER': 'sa',
+            'PASSWORD': 'Soluciones28',
+            'HOST': 'ASJUA-WEB05\SQLEXPRESS',
+            'PORT': '',
+            'OPTIONS': {
+                'driver': 'SQL Server Native Client 11.0',
+            },
+        },
+    }
+else:
+    DATABASES={
         'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'rexcom$cfdi4',
@@ -95,21 +108,8 @@ DATABASES = {
         'HOST': 'rexcom.mysql.pythonanywhere-services.com',
         'PORT': '3306',
         'OPTIONS': {'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"},
-
+        }
     }
-    # 'default': {
-    #     'ENGINE': 'sql_server.pyodbc',
-    #     'NAME': 'CFDI4',
-    #     'USER': 'sa',
-    #     'PASSWORD': 'Soluciones28',
-    #     'HOST': 'ASJUA-WEB05\SQLEXPRESS',
-    #     'PORT': '',
-    #     'OPTIONS': {
-    #         'driver': 'SQL Server Native Client 11.0',
-    #     },
-    # },
-}
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
