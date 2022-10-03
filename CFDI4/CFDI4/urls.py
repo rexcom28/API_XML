@@ -15,15 +15,19 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from .views import login, LoginView, LogoutView
-
-
+from .views import LoginView, LogoutView
+from django.conf import settings
+from django.conf.urls.static import static
 urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('admin/', admin.site.urls),
     path('login/', LoginView.as_view()),
     path('logout/', LogoutView.as_view()),
     path('Cats/', include('Cats.urls')),
-    path('Facturas/', include('Facturas.urls')),
-    path('dj-rest-auth/', include('dj_rest_auth.urls'))
+    path('', include('Facturas.urls')),
+    path('dj-rest-auth/', include('dj_rest_auth.urls')),
+    
 ]
+if settings.DEBUG: #DEV only
+    urlpatterns += static(settings.STATIC_URL, document_root= settings.STATIC_ROOT)
+    #urlpatterns += static(settings.MEDIA_URL, document_root= settings.MEDIA_ROOT)
