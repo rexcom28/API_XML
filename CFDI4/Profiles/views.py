@@ -62,3 +62,9 @@ def frontpage(request, username=None):
         'profile_work_images':profile_work_images,
         'techs':techs
     })
+
+def index(request):
+    profiles = Profile.objects.all()    
+    return render(request, 'Profiles/index.html', {
+        'profiles':profiles
+    })
