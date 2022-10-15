@@ -1,0 +1,14 @@
+{% extends 'Profiles/base.html' %}
+
+{% block title %} {{ request.user|upper }} {% endblock title %}
+
+{% block content %}
+{% include 'Profiles/partials/aboutme_section.html' %}
+
+{% include "Profiles/partials/section_goodat_base.html" %}
+
+{% include "Profiles/partials/my_work_section.html" %}
+
+
+{% endblock content %}
+    

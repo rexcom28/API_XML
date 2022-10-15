@@ -1,0 +1,49 @@
+{% load static %}
+<section class="section my-work" data-section="section3">
+    <div class="container">
+      <div class="section-heading">
+        <h2>My Work</h2>
+        <div class="line-dec"></div>
+        <span
+          >Aenean sollicitudin ex mauris, lobortis lobortis diam euismod sit
+          amet. Duis ac elit vulputate, lobortis arcu quis, vehicula
+          mauris.</span
+        >
+      </div>
+      <div class="row">
+        <div class="isotope-wrapper">
+          <form class="isotope-toolbar">
+            <label>
+                <input type="radio" data-type="*" checked="" name="isotope-filter"/>
+                <span>all</span>
+            </label>
+
+            
+            {% for tech in techs %}
+                <label>
+                    <input type="radio" data-type="{{tech.tech}}" name="isotope-filter"/>
+                    <span>{{tech.tech}}</span>
+                </label>                
+            {% endfor %}
+          </form>
+
+          <div class="isotope-box">
+            
+            {% for work in profile_work_images %}
+                <div  class="isotope-item" data-type="{{work.data_type}}">
+                    <figure class="snip1321">
+                    <img  src="{{work.image.url}}" alt="sq-sample26"/>
+                    <figcaption>
+                        <a href="{{work.image.url}}" data-lightbox="image-1" data-title="{{work.caption}}"><i class="fa fa-search"></i></a>
+                        <h4>{{work.title}}</h4>
+                        <span>{{work.desc}}</span>
+                    </figcaption>
+                    </figure>
+                </div>    
+            {% endfor %}
+                
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>

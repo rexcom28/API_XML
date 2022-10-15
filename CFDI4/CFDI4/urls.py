@@ -21,13 +21,13 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('admin/', admin.site.urls),
-    path('login/', LoginView.as_view()),
-    path('logout/', LogoutView.as_view()),
+    path('login/', LoginView.as_view(), name='login'),
+    path('logout/', LogoutView.as_view(), name='logout'),
     path('Cats/', include('Cats.urls')),
-    path('', include('Facturas.urls')),
+    path('', include('Profiles.urls')),
     path('dj-rest-auth/', include('dj_rest_auth.urls')),
     
 ]
 if settings.DEBUG: #DEV only
     urlpatterns += static(settings.STATIC_URL, document_root= settings.STATIC_ROOT)
-    #urlpatterns += static(settings.MEDIA_URL, document_root= settings.MEDIA_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root= settings.MEDIA_ROOT)

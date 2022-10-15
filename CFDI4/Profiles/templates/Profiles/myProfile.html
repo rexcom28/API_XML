@@ -1,0 +1,65 @@
+{% extends "Profiles/base.html" %}
+{% load static %}
+
+
+{% load crispy_forms_tags %}
+{% load widget_tweaks  %}
+
+{% block title %} {{request.user}} Profile {% endblock title %}
+
+{% block content %}
+<div id="page-wraper">
+    <section class="section contact-me" data-section="section4">
+        <div class="container">
+            
+          <div class="section-heading">
+            <h2>{{request.user}}</h2>
+            <div class="line-dec"></div>
+            <img src="{{img.url}}"   />
+          </div>
+          <div class="row">
+            <div class="right-content">
+              <div class="container">
+                <form id="contact" action="." method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="row">
+                        
+                        <div class="col-md-6">                
+                            <fieldset>
+                                {{form}}
+                            </fieldset>
+                        </div>
+                        <div class="col-md-6">
+                            <fieldset>
+                                {{form_profile}}
+                            </fieldset>
+                    
+                        </div>
+                        <div class="col-md-12">
+                        <fieldset>
+                            
+                        </fieldset>
+                        </div>
+                        <div class="col-md-12">
+                        <fieldset>
+                            
+                        </fieldset>
+                        </div>
+                        <div class="col-md-12">
+                        <fieldset>
+                            <button type="submit" id="form-submit" class="button">
+                            Save
+                            </button>
+                        </fieldset>
+                        </div>
+                    </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+    </section>
+</div>
+
+{% endblock content %}
+        

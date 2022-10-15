@@ -1,0 +1,55 @@
+<section class="section about-me" data-section="section1">
+    <div class="container">
+        <div class="section-heading">
+            <h2>About Me</h2>
+            <div class="line-dec"></div>
+            <span>
+                {{profile.bio}}
+            </span>
+        </div>
+        {% for readmore in profileReadMore %}
+            {% if readmore.section_type == 'ReadMore' %} 
+                
+                {% if readmore.left_rigth == 'left' %}
+                    <div class="left-image-post">
+                        <div class="row">
+                        <div class="col-md-6">
+                            <div class="left-image">
+                            <img src="{{readmore.image.url}}" alt="" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="right-text">
+                            <h4>{{readmore.title}}</h4>
+                            <p>{{readmore.description}}</p>
+                            <div class="white-button">
+                                <a href="#">Read More</a>
+                            </div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>                
+                {% else %}
+                    <div class="right-image-post">
+                        <div class="row">
+                        <div class="col-md-6">
+                            <div class="left-text">
+                            <h4>{{readmore.title}}</h4>
+                            <p>{{readmore.description}}</p>
+                            <div class="white-button">
+                                <a href="#">Read More</a>
+                            </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="right-image">
+                            <img src="{{readmore.image.url}}" alt="" />
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endif %}
+        {% endfor %}    
+    </div>
+</section>
