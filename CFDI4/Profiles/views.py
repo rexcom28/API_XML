@@ -54,13 +54,17 @@ def frontpage(request, username=None):
     profileGoodAt = profile.profileRM.all().filter(section_type='GoodAt')
 
     profile_work_images = profile.profile_works.all()
-    techs = Technology_type.objects.all()
+    techs = profile_work_images.values('data_type').distinct()
+    socials = profile.profile_social.all()    
+    
+    
     return render(request, 'Profiles/frontpage.html' ,{
         'profile':profile,
         'profileReadMore': profileReadMore,
         'profileGoodAt':profileGoodAt,
         'profile_work_images':profile_work_images,
-        'techs':techs
+        'techs':techs,
+        'socials':socials
     })
 
 def index(request):

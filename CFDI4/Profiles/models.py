@@ -1,8 +1,7 @@
+from email.policy import default
+from random import choices
 from django.db import models
 from django.contrib.auth.models import User
-
-
-
 
 def user_avatar_directory_path(instance, filename):
     return 'avatars/{0}/{1}'.format(instance.user.username, filename)
@@ -25,6 +24,18 @@ class Profile(models.Model):
     def __str__(self):
         return str(self.user)
 
+class profilie_social_media(models.Model):
+    TW='Twitter'
+    FB='Facebook'
+    IN='Linkedin'
+    socials = (
+        (TW,'Twitter'),
+        (FB,'Facebook'),
+        (IN,'Linkedin'),
+    )
+    profile     = models.ForeignKey(Profile, related_name='profile_social', on_delete=models.CASCADE)
+    social_type = models.CharField(max_length=30, choices = socials)
+    url         = models.URLField(max_length=255, blank=True, null=True)
 class profileReadeMore(models.Model):
     ReadMore    = 'ReadMore'
     GoodAt      = 'GoodAt'

@@ -15,18 +15,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from .views import LoginView, LogoutView
+from .views import LoginView, LogoutView, RegisterUserAPIView
 from django.conf import settings
 from django.conf.urls.static import static
 urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('admin/', admin.site.urls),
+    path('register/', RegisterUserAPIView.as_view()),
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('Cats/', include('Cats.urls')),
     path('', include('Profiles.urls')),
     path('dj-rest-auth/', include('dj_rest_auth.urls')),
-    
 ]
 if settings.DEBUG: #DEV only
     urlpatterns += static(settings.STATIC_URL, document_root= settings.STATIC_ROOT)
