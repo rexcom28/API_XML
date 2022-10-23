@@ -7,7 +7,7 @@ from . models import Profile, Technology_type
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-
+from django.contrib.auth.decorators import login_required
 
 class ProfileView(LoginRequiredMixin, View):
     form_class      = UserForm
@@ -46,7 +46,7 @@ class ProfileView(LoginRequiredMixin, View):
         })
 
 
-
+@login_required(login_url='login2')
 def frontpage(request, username=None):
      
     profile = User.objects.get(username=username).profile    
@@ -67,6 +67,7 @@ def frontpage(request, username=None):
         'socials':socials
     })
 
+@login_required(login_url='login2')
 def index(request):
     profiles = Profile.objects.all()    
     return render(request, 'Profiles/index.html', {

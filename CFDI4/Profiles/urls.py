@@ -5,5 +5,5 @@ urlpatterns = [
     path('', index, name='index'),
     path('u/<str:username>/', frontpage, name='frontpage'),
     path('Profile/', ProfileView.as_view(), name='ProfileView'),
-
+    
 ]

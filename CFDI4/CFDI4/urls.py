@@ -15,9 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from .views import LoginView, LogoutView, RegisterUserAPIView
+from .views import LoginView, LogoutView, RegisterUserAPIView, SignUpView,LoginPageView
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth import  views as auth_views
+
+
 urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('admin/', admin.site.urls),
@@ -27,6 +30,10 @@ urlpatterns = [
     path('Cats/', include('Cats.urls')),
     path('', include('Profiles.urls')),
     path('dj-rest-auth/', include('dj_rest_auth.urls')),
+    path('signup/', SignUpView.as_view(), name='signup'),
+    path('login2/',LoginPageView.as_view(), name='login2'),
+    path('logout2/', auth_views.LogoutView.as_view(), name='logout2'),
+    path("accounts/", include("django.contrib.auth.urls")),
 ]
 if settings.DEBUG: #DEV only
     urlpatterns += static(settings.STATIC_URL, document_root= settings.STATIC_ROOT)

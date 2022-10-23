@@ -92,6 +92,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'CFDI4.wsgi.application'
 
+LOGOUT_REDIRECT_URL ='/login2/'
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases

@@ -1,124 +1,93 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1, shrink-to-fit=no"
-        />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
-        <link
-          href="https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900"
-          rel="stylesheet"
-        />
-    
-        <title> {% block title %} {% endblock title %} Portfolio</title>
+{% load i18n static %}<!DOCTYPE html>
+{% get_current_language as LANGUAGE_CODE %}{% get_current_language_bidi as LANGUAGE_BIDI %}
+<html lang="{{ LANGUAGE_CODE|default:"en-us" }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
+<head>
+<title>{% block title %}{% endblock %}</title>
+<link rel="stylesheet" type="text/css" href="{% block stylesheet %}{% static "admin/css/base.css" %}{% endblock %}">
+{% block extrastyle %}{% endblock %}
+{% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% block stylesheet_rtl %}{% static "admin/css/rtl.css" %}{% endblock %}">{% endif %}
+{% block extrahead %}{% endblock %}
+{% block responsive %}
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static "admin/css/responsive.css" %}">
+    {% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% static "admin/css/responsive_rtl.css" %}">{% endif %}
+{% endblock %}
+{% block blockbots %}<meta name="robots" content="NONE,NOARCHIVE">{% endblock %}
+</head>
+{% load i18n %}
 
-        <!-- Bootstrap core CSS -->
-        <link href="{% static 'Profiles/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" />
-    
-        <!-- Additional CSS Files -->
-        <link rel="stylesheet" href="{% static 'Profiles/assets/css/fontawesome.css' %}" />
-        <link rel="stylesheet" href="{% static 'Profiles/assets/css/templatemo-style.css' %}" />
-        <link rel="stylesheet" href="{% static 'Profiles/assets/css/owl.css' %}" />
-        <link rel="stylesheet" href="{% static 'Profiles/assets/css/lightbox.css' %}" />
-    </head>
-    <body>
-        <div id="page-wraper"> 
-            <!-- Sidebar Menu -->
-            <div class="responsive-nav">
-              <i class="fa fa-bars" id="menu-toggle"></i>
-              <div id="menu" class="menu">
-                <i class="fa fa-times" id="menu-close"></i>
-                <div class="container">
-                  <div class="image">
-                    
-                    <!--a href="#"><img src="{% static 'Profiles/assets/images/author-image.jfif' %}" alt="" /></a-->  
-                    <a href="#"><img src="{{profile.avatar.url}}" alt="" /></a>  
-                  </div>
-                  <div class="author-content">
-                    <h4>{{profile.user.get_full_name }}</h4>
-                    <span>{{profile.job_title}}</span>
-                  </div>
-                  <nav class="main-nav" role="navigation">
-                    <ul class="main-menu">
-                      <li><a href="#section1">About Me</a></li>
-                      <li><a href="#section2">What I’m good at</a></li>
-                      <li><a href="#section3">My Work</a></li>
-                      <li><a href="#section4">Contact Me</a></li>
-                    </ul>
-                  </nav>
-                  {% include "Profiles/partials/user_socials.html" %}
-                  <div class="copyright-text">
-                    <p>Copyright 2019 Reflux Design</p>
-                  </div>
-                </div>
-              </div>
-            </div>           
-            {% block content %}
-                
-            {% endblock content %}                
+<body class="{% if is_popup %}popup {% endif %}{% block bodyclass %}{% endblock %}"
+  data-admin-utc-offset="{% now "Z" %}">
+
+<!-- Container -->
+<div id="container">
+
+    {% if not is_popup %}
+    <!-- Header -->
+    <div id="header">
+        <div id="branding">
+        {% block branding %}{% endblock %}
         </div>
-        <!-- Scripts -->
-        <!-- Bootstrap core JavaScript -->
-        <script src="{% static 'Profiles/vendor/jquery/jquery.min.js' %}"></script>
-        <script src="{% static 'Profiles/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+        {% block usertools %}
+        {% if has_permission %}
+        <div id="user-tools">
+            {% block welcome-msg %}
+                {% trans 'Welcome,' %}
+                <strong>{% firstof user.get_short_name user.get_username %}</strong>.
+            {% endblock %}
+            {% block userlinks %}
+                {% if site_url %}
+                    <a href="{{ site_url }}">{% trans 'View site' %}</a> /
+                {% endif %}
+                {% if user.is_active and user.is_staff %}
+                    {% url 'django-admindocs-docroot' as docsroot %}
+                    {% if docsroot %}
+                        <a href="{{ docsroot }}">{% trans 'Documentation' %}</a> /
+                    {% endif %}
+                {% endif %}
+                {% if user.has_usable_password %}
+                <a href="{% url 'admin:password_change' %}">{% trans 'Change password' %}</a> /
+                {% endif %}
+                <a href="{% url 'admin:logout' %}">{% trans 'Log out' %}</a>
+            {% endblock %}
+        </div>
+        {% endif %}
+        {% endblock %}
+        {% block nav-global %}{% endblock %}
+    </div>
+    <!-- END Header -->
+    {% block breadcrumbs %}
+    <div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+    {% if title %} &rsaquo; {{ title }}{% endif %}
+    </div>
+    {% endblock %}
+    {% endif %}
 
-        <script src="{% static 'Profiles/assets/js/isotope.min.js' %}"></script>
-        <script src="{% static 'Profiles/assets/js/owl-carousel.js' %}"></script>
-        <script src="{% static 'Profiles/assets/js/lightbox.js' %}"></script>
-        <script src="{% static 'Profiles/assets/js/custom.js' %}"></script>
-        <script>
-            //according to loftblog tut
-            $(".main-menu li:first").addClass("active");
-      
-            var showSection = function showSection(section, isAnimate) {
-              var direction = section.replace(/#/, ""),
-                reqSection = $(".section").filter(
-                  '[data-section="' + direction + '"]'
-                ),
-                reqSectionPos = reqSection.offset().top - 0;
-      
-              if (isAnimate) {
-                $("body, html").animate(
-                  {
-                    scrollTop: reqSectionPos
-                  },
-                  800
-                );
-              } else {
-                $("body, html").scrollTop(reqSectionPos);
-              }
-            };
-      
-            var checkSection = function checkSection() {
-              $(".section").each(function() {
-                var $this = $(this),
-                  topEdge = $this.offset().top - 80,
-                  bottomEdge = topEdge + $this.height(),
-                  wScroll = $(window).scrollTop();
-                if (topEdge < wScroll && bottomEdge > wScroll) {
-                  var currentId = $this.data("section"),
-                    reqLink = $("a").filter("[href*=\\#" + currentId + "]");
-                  reqLink
-                    .closest("li")
-                    .addClass("active")
-                    .siblings()
-                    .removeClass("active");
-                }
-              });
-            };
-      
-            $(".main-menu").on("click", "a", function(e) {
-              e.preventDefault();
-              showSection($(this).attr("href"), true);
-            });
-      
-            $(window).scroll(function() {
-              checkSection();
-            });
-        </script>
-    </body>
+    {% block messages %}
+        {% if messages %}
+        <ul class="messagelist">{% for message in messages %}
+          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|capfirst }}</li>
+        {% endfor %}</ul>
+        {% endif %}
+    {% endblock messages %}
+
+    <!-- Content -->
+    <div id="content" class="{% block coltype %}colM{% endblock %}">
+        {% block pretitle %}{% endblock %}
+        {% block content_title %}{% if title %}<h1>{{ title }}</h1>{% endif %}{% endblock %}
+        {% block content %}
+        {% block object-tools %}{% endblock %}
+        {{ content }}
+        {% endblock %}
+        {% block sidebar %}{% endblock %}
+        <br class="clear">
+    </div>
+    <!-- END Content -->
+
+    {% block footer %}<div id="footer"></div>{% endblock %}
+</div>
+<!-- END Container -->
+
+</body>
 </html>
