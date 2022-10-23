@@ -1,4 +1,5 @@
 from email.policy import default
+from enum import unique
 from random import choices
 from django.db import models
 from django.contrib.auth.models import User
@@ -7,7 +8,7 @@ def user_avatar_directory_path(instance, filename):
     return 'avatars/{0}/{1}'.format(instance.user.username, filename)
 
 class Technology_type(models.Model):
-    tech = models.CharField(max_length=55) 
+    tech = models.CharField(max_length=55, unique=True) 
     desc = models.CharField(max_length=150)
 
 
@@ -21,6 +22,9 @@ class Profile(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     follows = models.ManyToManyField('self', related_name='followed_by',symmetrical=False, blank=True, null=True)
     job_title = models.CharField(max_length=55, blank=True, null=True)
+    good_at_bio = models.TextField(blank=True)
+    mywork_bio = models.TextField(blank=True)
+
     def __str__(self):
         return str(self.user)
 
