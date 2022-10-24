@@ -44,13 +44,27 @@
                   </div>
                   <nav class="main-nav" role="navigation">
                     <ul class="main-menu">
-                      <li><a href="#section1">About Me</a></li>
-                      <li><a href="#section2">What I’m good at</a></li>
-                      <li><a href="#section3">My Work</a></li>
+                      {% if profile.show_ReadMore %}
+                        <li><a href="#section1">About Me</a></li>
+                      {% endif %}
+                      {% if profile.show_GoodAt %}
+                        <li><a href="#section2">What I’m good at</a></li>
+                      {% endif %}
+                      
+                      {% if profile.show_WorkImages %}
+                        <li><a href="#section3">My Work</a></li>
+                      {% endif %}
                       <li><a href="#section4">Contact Me</a></li>
                     </ul>
                   </nav>
-                  {% include "Profiles/partials/user_socials.html" %}
+
+                  
+                  {% if profile.show_socials %}
+                    {% include "Profiles/partials/user_socials.html" %}  
+                  {% endif %}
+                    
+                  
+                  
                   <div class="copyright-text">
                     <p>Copyright 2019 Reflux Design</p>
                   </div>

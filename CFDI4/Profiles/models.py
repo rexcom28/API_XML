@@ -1,5 +1,6 @@
 from email.policy import default
 from enum import unique
+from operator import mod
 from random import choices
 from django.db import models
 from django.contrib.auth.models import User
@@ -24,6 +25,12 @@ class Profile(models.Model):
     job_title = models.CharField(max_length=55, blank=True, null=True)
     good_at_bio = models.TextField(blank=True)
     mywork_bio = models.TextField(blank=True)
+
+    #show sections
+    show_socials = models.BooleanField(default=True)
+    show_ReadMore = models.BooleanField(default=True)
+    show_GoodAt = models.BooleanField(default=True)
+    show_WorkImages = models.BooleanField(default=True)
 
     def __str__(self):
         return str(self.user)
