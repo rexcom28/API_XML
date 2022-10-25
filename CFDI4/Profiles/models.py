@@ -25,6 +25,7 @@ class Profile(models.Model):
     job_title = models.CharField(max_length=55, blank=True, null=True)
     good_at_bio = models.TextField(blank=True)
     mywork_bio = models.TextField(blank=True)
+    contact_msn = models.TextField(blank=True)
 
     #show sections
     show_socials = models.BooleanField(default=True)

@@ -1,5 +1,4 @@
-from atexit import register
-import site
+from django import forms
 from django.contrib import admin
 from .models import Profile, profileReadeMore, profile_work_images, Technology_type, profilie_social_media
 
@@ -17,8 +16,16 @@ class profileReadMoreAdmin(admin.ModelAdmin):
 class profile_work_imagesAdmin(admin.ModelAdmin):
     list_display= ['profile', 'image', 'title', 'caption', 'data_type', 'desc' ]
 
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model =Profile
+        exclude = ['user', 'follows']
+class profileAdmin(admin.ModelAdmin):
+    form= ProfileForm
+
 admin.site.register(Technology_type, TechnologyAdmin)
-admin.site.register(Profile)
+admin.site.register(Profile, profileAdmin)
 admin.site.register(profileReadeMore, profileReadMoreAdmin)
 admin.site.register(profile_work_images, profile_work_imagesAdmin)
 admin.site.register(profilie_social_media, profileSocialAdmin)
