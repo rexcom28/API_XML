@@ -1,6 +1,6 @@
-from django.forms.models import inlineformset_factory
+from contactforms.models import Contact
 from django import forms
-from . models import Profile
+from . models import Profile, CustomContact
 from django.contrib.auth.models import User
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
@@ -16,7 +16,7 @@ class ProfileForm(forms.ModelForm):
     #avatar = forms.FileInput(required =False)
     class Meta:
         model = Profile
-        fields = ('bio', 'avatar',)            
+        fields = ('bio', 'avatar', 'job_title', 'good_at_bio', 'mywork_bio', 'contact_msn', 'show_socials', 'show_ReadMore', 'show_GoodAt', 'show_WorkImages')            
         widgets = {
             'bio': forms.Textarea(attrs={
                 'rows':3,
@@ -31,3 +31,19 @@ class ProfileForm(forms.ModelForm):
             }),
         }
     
+
+class CustomContactForm(forms.ModelForm):
+    class Meta:
+        model = CustomContact
+        exclude = ('created',)
+        labels = {
+            'contact_to_user':(''),
+        }
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Your Name'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Your Email'}),
+            'subject': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Subject'}),
+            'message': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Message'}),
+            'contact_to_user': forms.Select(attrs={'class': 'input-group-field', 'style':'display:none'}),
+
+        }

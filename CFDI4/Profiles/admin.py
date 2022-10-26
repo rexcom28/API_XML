@@ -1,6 +1,8 @@
 from django import forms
 from django.contrib import admin
-from .models import Profile, profileReadeMore, profile_work_images, Technology_type, profilie_social_media
+from .models import (Profile, profileReadeMore, profile_work_images,
+  Technology_type,
+  profilie_social_media, CustomContact)
 
 
 class TechnologyAdmin(admin.ModelAdmin):
@@ -24,6 +26,7 @@ class ProfileForm(forms.ModelForm):
 class profileAdmin(admin.ModelAdmin):
     form= ProfileForm
 
+admin.site.register(CustomContact)
 admin.site.register(Technology_type, TechnologyAdmin)
 admin.site.register(Profile, profileAdmin)
 admin.site.register(profileReadeMore, profileReadMoreAdmin)

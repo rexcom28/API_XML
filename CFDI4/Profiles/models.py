@@ -1,13 +1,13 @@
-from email.policy import default
-from enum import unique
-from operator import mod
-from random import choices
+from contactforms.models import Contact
 from django.db import models
 from django.contrib.auth.models import User
 
 def user_avatar_directory_path(instance, filename):
     return 'avatars/{0}/{1}'.format(instance.user.username, filename)
 
+
+
+    
 class Technology_type(models.Model):
     tech = models.CharField(max_length=55, unique=True) 
     desc = models.CharField(max_length=150)
@@ -78,3 +78,14 @@ class profile_work_images(models.Model):
     caption = models.CharField(max_length=25)
     data_type = models.CharField(max_length=30, choices =c_tech())
     desc    = models.CharField(max_length=65, blank=True)
+
+class CustomContact(models.Model):
+    
+    contact_to_user  = models.ForeignKey(Profile, related_name='profile_contactuser', on_delete=models.CASCADE)
+    name = models.CharField(max_length=120,blank=True, null=True)
+    email = models.EmailField(blank=True, null=True)
+    subject = models.CharField(max_length=200)
+    message = models.TextField(blank=True, null=True)
+    created = models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return self.contact_to_user.user.username

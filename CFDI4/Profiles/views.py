@@ -1,14 +1,12 @@
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import View
-from . forms import ProfileForm,UserForm
+from . forms import ProfileForm,UserForm, CustomContactForm
 from . models import Profile, Technology_type
-
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
-
 from django.contrib.auth.decorators import login_required
-
+from django.contrib import messages
 class ProfileView(LoginRequiredMixin, View):
     form_class      = UserForm
     model           = User    
@@ -56,15 +54,23 @@ def frontpage(request, username=None):
     profile_work_images = profile.profile_works.all()
     techs = profile_work_images.values('data_type').distinct()
     socials = profile.profile_social.all()    
-    
-    
+    contactForm = CustomContactForm(initial={'contact_to_user':request.user})
+    if request.method== 'POST':
+        contactForm = CustomContactForm(request.POST)
+        print(contactForm.is_valid())
+        if contactForm.is_valid():
+            contactForm.save()
+            messages.add_message(request, messages.INFO, 'Message sent successfully!')
+            return redirect('index')
     return render(request, 'Profiles/frontpage.html' ,{
         'profile':profile,
         'profileReadMore': profileReadMore,
         'profileGoodAt':profileGoodAt,
         'profile_work_images':profile_work_images,
         'techs':techs,
-        'socials':socials
+        'socials':socials,
+        'contactForm':contactForm,
+        
     })
 
 @login_required(login_url='login2')

@@ -44,7 +44,8 @@ INSTALLED_APPS = [
 
     'crispy_forms',
     'widget_tweaks',
-
+    'contactforms',
+    
     'Cats',
     'Facturas',
     'Profiles',
@@ -110,7 +111,7 @@ if DEBUG:
             #     'driver': 'SQL Server Native Client 11.0',
             # },
             'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'CFDI4',
+            'NAME': 'CFDI40',
             'USER': 'root',
             'PASSWORD': 'root',
             'HOST': '127.0.0.1',
