@@ -7,14 +7,8 @@ def user_avatar_directory_path(instance, filename):
 
 
 
-    
-class Technology_type(models.Model):
-    tech = models.CharField(max_length=55, unique=True) 
-    desc = models.CharField(max_length=150)
-
-
 class Profile(models.Model):
-    
+
     user = models.OneToOneField( User, on_delete=models.CASCADE)
     bio = models.TextField(blank=True)
     #avatar = models.ImageField(default='avatar.png', upload_to='avatars')
@@ -63,24 +57,31 @@ class profileReadeMore(models.Model):
     )
     profile = models.ForeignKey(Profile, related_name='profileRM', on_delete=models.CASCADE)
     title   = models.CharField(max_length=55)
-    description = models.TextField()    
+    description = models.TextField()
     section_type= models.CharField(max_length=10, choices=types_sec, default='ReadMore')
     left_rigth  = models.CharField(max_length=5,choices=le_ri, default='left')
     image = models.ImageField(blank=True, null=True)
 
+class Technology_type(models.Model):
+    tech = models.CharField(max_length=55, unique=True)
+    desc = models.CharField(max_length=150)
+
+
 class profile_work_images(models.Model):
-    def c_tech():
-        return [(tech.tech, f'{tech.tech}-{tech.desc}') for tech in Technology_type.objects.all()]
+
+    # def c_tech():
+    #     return [(tech.tech, f'{tech.tech}-{tech.desc}') for tech in Technology_type.objects.all()]
 
     profile = models.ForeignKey(Profile, related_name='profile_works', on_delete=models.CASCADE)
     image   = models.ImageField()
     title   = models.CharField(max_length=25)
     caption = models.CharField(max_length=25)
-    data_type = models.CharField(max_length=30, choices =c_tech())
+    data_type = models.CharField(max_length=30)#, choices =c_tech())
     desc    = models.CharField(max_length=65, blank=True)
 
+
 class CustomContact(models.Model):
-    
+
     contact_to_user  = models.ForeignKey(Profile, related_name='profile_contactuser', on_delete=models.CASCADE)
     name = models.CharField(max_length=120,blank=True, null=True)
     email = models.EmailField(blank=True, null=True)

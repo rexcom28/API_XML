@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'widget_tweaks',
     'contactforms',
-    
+
     'Cats',
     'Facturas',
     'Profiles',
@@ -97,7 +97,7 @@ LOGOUT_REDIRECT_URL ='/login2/'
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
-DEBUG = True
+DEBUG = False
 if DEBUG:
     DATABASES = {
         'default': {
@@ -111,7 +111,7 @@ if DEBUG:
             #     'driver': 'SQL Server Native Client 11.0',
             # },
             'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'CFDI40',
+            'NAME': 'CFDI4',
             'USER': 'root',
             'PASSWORD': 'root',
             'HOST': '127.0.0.1',
@@ -170,16 +170,16 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 if not DEBUG:
-    STATIC_ROOT = os.path.join(BASE_DIR, "static")
+    #STATIC_ROOT = os.path.join(BASE_DIR, "static")
     STATICFILES_DIRS = [
             BASE_DIR / 'static'
         ]
-    
+
     MEDIA_URL = '/media/'
     MEDIA_ROOT = BASE_DIR / 'media'
     STATIC_URL = '/static/'
 if DEBUG:
-    
+
     STATICFILES_DIRS = [
         BASE_DIR / 'static',
     ]
