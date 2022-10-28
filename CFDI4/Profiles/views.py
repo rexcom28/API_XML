@@ -56,12 +56,12 @@ def frontpage(request, username=None):
     socials = profile.profile_social.all()    
     contactForm = CustomContactForm(initial={'contact_to_user':request.user})
     if request.method== 'POST':
-        contactForm = CustomContactForm(request.POST)
-        print(contactForm.is_valid())
+        
+        contactForm = CustomContactForm(request.POST)         
         if contactForm.is_valid():
             contactForm.save()
             messages.add_message(request, messages.INFO, 'Message sent successfully!')
-            return redirect('index')
+            return redirect('frontpage', username=username)
     return render(request, 'Profiles/frontpage.html' ,{
         'profile':profile,
         'profileReadMore': profileReadMore,

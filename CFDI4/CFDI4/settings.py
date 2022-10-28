@@ -97,7 +97,7 @@ LOGOUT_REDIRECT_URL ='/login2/'
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
-DEBUG = False
+DEBUG = True
 if DEBUG:
     DATABASES = {
         'default': {
@@ -111,7 +111,7 @@ if DEBUG:
             #     'driver': 'SQL Server Native Client 11.0',
             # },
             'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'CFDI4',
+            'NAME': 'CFDI40',
             'USER': 'root',
             'PASSWORD': 'root',
             'HOST': '127.0.0.1',

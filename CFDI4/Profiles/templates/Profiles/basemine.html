@@ -15,7 +15,8 @@
         />
     
         <title> {% block title %} {% endblock title %} Portfolio</title>
-
+        
+        
         <!-- Bootstrap core CSS -->
         <link href="{% static 'Profiles/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" />
     
@@ -24,6 +25,7 @@
         <link rel="stylesheet" href="{% static 'Profiles/assets/css/templatemo-style.css' %}" />
         <link rel="stylesheet" href="{% static 'Profiles/assets/css/owl.css' %}" />
         <link rel="stylesheet" href="{% static 'Profiles/assets/css/lightbox.css' %}" />
+        
     </head>
     <body>
         <div id="page-wraper"> 
@@ -33,8 +35,7 @@
               <div id="menu" class="menu">
                 <i class="fa fa-times" id="menu-close"></i>
                 <div class="container">
-                  <div class="image">
-                    
+                  <div class="image">                    
                     <!--a href="#"><img src="{% static 'Profiles/assets/images/author-image.jfif' %}" alt="" /></a-->  
                     <a href="#"><img src="{{profile.avatar.url}}" alt="" /></a>  
                   </div>
@@ -71,10 +72,14 @@
                 </div>
               </div>
             </div>           
+            
+            
+            
             {% block content %}
                 
             {% endblock content %}                
         </div>
+        
         <!-- Scripts -->
         <!-- Bootstrap core JavaScript -->
         <script src="{% static 'Profiles/vendor/jquery/jquery.min.js' %}"></script>
@@ -129,10 +134,20 @@
               e.preventDefault();
               showSection($(this).attr("href"), true);
             });
-      
+            
+            $(".alert-danger").on("click","",function(e){
+              console.log(e);
+              showSection('#section4',true);
+            })
+
+            
+            
             $(window).scroll(function() {
               checkSection();
             });
+
         </script>
+
+        
     </body>
 </html>

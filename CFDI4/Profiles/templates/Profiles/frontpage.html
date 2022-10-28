@@ -4,23 +4,20 @@
 
 {% block content %}
 
+    {% if profile.show_ReadMore %}
+        {% include 'Profiles/partials/aboutme_section.html' %}    
+    {% endif %}
+        
 
-{% if profile.show_ReadMore %}
-    {% include 'Profiles/partials/aboutme_section.html' %}    
-{% endif %}
-    
+    {% if profile.show_GoodAt %}
+        {% include "Profiles/partials/section_goodat_base.html" %}    
+    {% endif %}
 
-{% if profile.show_GoodAt %}
-    {% include "Profiles/partials/section_goodat_base.html" %}    
-{% endif %}
-
-
-{% if profile.show_WorkImages %}
-    {% include "Profiles/partials/my_work_section.html" %}    
-{% endif %}
-    
-
-{% include "Profiles/partials/contactme_section.html" %}
+    {% if profile.show_WorkImages %}
+        {% include "Profiles/partials/my_work_section.html" %}    
+    {% endif %}
+        
+    {% include "Profiles/partials/contactme_section.html" %}
 
 {% endblock content %}
     
