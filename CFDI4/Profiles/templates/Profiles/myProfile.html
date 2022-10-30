@@ -11,11 +11,11 @@
 <div id="page-wraper">
     <section class="section contact-me" data-section="section4">
         <div class="container">
-            
+          {% include 'Profiles/partials/messagesBase.html' %}  
           <div class="section-heading">
             <h2>{{request.user}}</h2>
             <div class="line-dec"></div>
-            <img src="{{img.url}}"   />
+            <!--img src="{{img.url}}"  /-->
           </div>
           <div class="row">
             <div class="right-content">

@@ -1,4 +1,7 @@
 {% load static %}
+
+{% url 'ProfileView' request.user.username as myprofile %}
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -36,8 +39,15 @@
                 <i class="fa fa-times" id="menu-close"></i>
                 <div class="container">
                   <div class="image">                    
-                    <!--a href="#"><img src="{% static 'Profiles/assets/images/author-image.jfif' %}" alt="" /></a-->  
-                    <a href="#"><img src="{{profile.avatar.url}}" alt="" /></a>  
+                    
+                    
+                    {% if not profile.avatar.url %}
+                      <a href="{% url 'frontpage' username %}"><img src="{{img.url}}" alt="" /></a>
+                    {% else %}
+                      <a href="{% url 'frontpage' profile.user.username %}"><img src="{{profile.avatar.url}}" alt="" /></a>    
+                    {% endif %}
+                      
+                    
                   </div>
                   <div class="author-content">
                     <h4>{{profile.user.get_full_name }}</h4>
@@ -45,17 +55,27 @@
                   </div>
                   <nav class="main-nav" role="navigation">
                     <ul class="main-menu">
-                      {% if profile.show_ReadMore %}
-                        <li><a href="#section1">About Me</a></li>
-                      {% endif %}
-                      {% if profile.show_GoodAt %}
-                        <li><a href="#section2">What I’m good at</a></li>
-                      {% endif %}
                       
-                      {% if profile.show_WorkImages %}
-                        <li><a href="#section3">My Work</a></li>
+                      {% if request.path != myprofile  %}
+                        
+                      
+                        {% if profile.show_ReadMore %}
+                          <li><a href="#section1">About Me</a></li>
+                        {% endif %}
+                        {% if profile.show_GoodAt %}
+                          <li><a href="#section2">What I’m good at</a></li>
+                        {% endif %}
+                        
+                        {% if profile.show_WorkImages %}
+                          <li><a href="#section3">My Work</a></li>
+                        {% endif %}
+                                              
+                        {% if request.user.username == profile.user.username %}
+                          <li><a href="{% url 'ProfileView' profile.user.username %}">My profile</a></li>
+                        {% else %}
+                          <li><a href="#section4">Contact Me</a></li>
+                        {% endif %}
                       {% endif %}
-                      <li><a href="#section4">Contact Me</a></li>
                     </ul>
                   </nav>
 
@@ -64,7 +84,7 @@
                     {% include "Profiles/partials/user_socials.html" %}  
                   {% endif %}
                     
-                  
+
                   
                   <div class="copyright-text">
                     <p>Copyright 2022 Rexcompany</p>
@@ -73,8 +93,7 @@
               </div>
             </div>           
             
-            
-            
+                  
             {% block content %}
                 
             {% endblock content %}                
@@ -131,7 +150,10 @@
             };
       
             $(".main-menu").on("click", "a", function(e) {
-              e.preventDefault();
+              if('Profile' === $(this).attr("href").split('/').find(el => el =='Profile')){
+                return
+              }
+              e.preventDefault();              
               showSection($(this).attr("href"), true);
             });
             

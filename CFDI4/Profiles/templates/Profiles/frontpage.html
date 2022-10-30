@@ -4,6 +4,7 @@
 
 {% block content %}
 
+
     {% if profile.show_ReadMore %}
         {% include 'Profiles/partials/aboutme_section.html' %}    
     {% endif %}
@@ -18,6 +19,11 @@
     {% endif %}
         
     {% include "Profiles/partials/contactme_section.html" %}
-
+    
+    
+    {% if request.user.username == profile.user.username %}
+        si
+    {% endif %}
+        
 {% endblock content %}
     

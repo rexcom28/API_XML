@@ -12,8 +12,9 @@ class ProfileView(LoginRequiredMixin, View):
     model           = User    
     template_name   = 'Profiles/myProfile.html'
     
-
-    def get(self, request, *args, **kwargs):
+ 
+    def get(self, request,*args, **kwargs):
+        
         instance_           = User.objects.get(username=request.user)  
         instance_profile    = Profile.objects.get(user=request.user)
         form                = self.form_class(instance=instance_)
@@ -22,25 +23,30 @@ class ProfileView(LoginRequiredMixin, View):
         return render(request, self.template_name, {
             'form': form, 
             'form_profile':form_profile,
-            'img':instance_profile.avatar
+            'img':instance_profile.avatar,
+            'username':instance_.username
         })
     
-    def post(self, request, *args, **kwargs):
+    def post(self, request,*args, **kwargs):
         instance_           = User.objects.get(username=request.user)
         instance_profile    = Profile.objects.get(user=request.user)
         form                = self.form_class(request.POST, request.FILES, instance=instance_)
         form_profile        = ProfileForm(request.POST, request.FILES,instance=instance_profile)
-
+        img =form_profile.instance.avatar
+        
         if form.is_valid():            
             form.save()
+            
             if form_profile.is_valid():
-                img =form_profile.instance.avatar                
+                
                 form_profile.save()
-        
+                messages.add_message(request, messages.INFO, 'Profile info saved!')
+
         return render(request, self.template_name, {
             'form':form, 
             'form_profile':form_profile,
-            'img':img
+            'img':img,
+            'username':instance_.username
         })
 
 

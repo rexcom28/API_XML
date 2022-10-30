@@ -1,10 +1,7 @@
 <div class="social-network">
     <ul class="soial-icons">
       {% for social in socials %}
-        <li>
-          
-          
-            
+        <li>            
           <a href="{% if social.url == None %}#{% else %}{{social.url}}{% endif %}"><i class="fa fa-{{social.social_type|lower}}"></i></a>  
         </li>
       {% endfor %}
