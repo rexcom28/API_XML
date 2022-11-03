@@ -1,0 +1,9 @@
+{% for obj in object_list %}
+  {{obj.profile}} <br>
+  {{obj.title}}<br>
+  {{obj.id}}<br>
+  
+  {% if obj.profile.user == request.user %}
+    <button>edit</button>
+  {% endif %}
+{% endfor %}

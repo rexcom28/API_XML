@@ -1,5 +1,13 @@
+import imp
 from django import forms
 from django.contrib import admin
+from django.contrib.contenttypes.models import ContentType
+
+from django.contrib.auth.models import Permission
+
+admin.site.register(Permission)
+admin.site.register(ContentType)
+
 from .models import (Profile, profileReadeMore, profile_work_images,
   Technology_type,
   profilie_social_media, CustomContact)

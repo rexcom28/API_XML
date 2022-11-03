@@ -15,7 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from .views import LoginView, LogoutView, RegisterUserAPIView, SignUpView,LoginPageView
+from .views import LoginView, LogoutView, RegisterUserAPIView, SignUpView
+
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import  views as auth_views
@@ -31,7 +32,8 @@ urlpatterns = [
     path('', include('Profiles.urls')),
     path('dj-rest-auth/', include('dj_rest_auth.urls')),
     path('signup/', SignUpView.as_view(), name='signup'),
-    path('login2/',LoginPageView.as_view(), name='login2'),
+    
+    path('login2/',auth_views.LoginView.as_view(template_name = 'Profiles/login.html'), name='login2'),
     path('logout2/', auth_views.LogoutView.as_view(), name='logout2'),
     path("accounts/", include("django.contrib.auth.urls")),
 ]

@@ -1,18 +1,30 @@
 
+from CFDI4.GroupValidator import check_user_able_to_see_page
 from django.shortcuts import render, redirect
 from django.views import View
-from . forms import ProfileForm,UserForm, CustomContactForm
-from . models import Profile, Technology_type
+from django.views.generic import ListView
+
+from . forms import ProfileForm,UserForm, CustomContactForm, ProfileReadMoreForm
+from . models import Profile, Technology_type, profileReadeMore
 from django.contrib.auth.models import User
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin,LoginRequiredMixin
+
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.contrib.auth.models import Group,User, Permission
+from django.contrib.contenttypes.models import ContentType
+from django.utils.decorators import method_decorator
+
+
+
 class ProfileView(LoginRequiredMixin, View):
     form_class      = UserForm
-    model           = User    
+    model           = User
     template_name   = 'Profiles/myProfile.html'
+    login_url = 'login2'
     
- 
+    
+
     def get(self, request,*args, **kwargs):
         
         instance_           = User.objects.get(username=request.user)  
@@ -50,9 +62,34 @@ class ProfileView(LoginRequiredMixin, View):
         })
 
 
+#@method_decorator(check_user_able_to_see_page('mirones'),name='dispatch')
+class ProfileReadMoreListView(
+    PermissionRequiredMixin,
+    LoginRequiredMixin, ListView):
+
+    def CheckUserPermission(group):
+        permissions=[]
+        for x in Group.objects.get(name=group).permissions.all():
+            app=ContentType.objects.get(id=x.content_type_id)
+            permissions.append(f'{app.app_label}.{x.codename}')
+        return permissions
+    
+    permission_required = (CheckUserPermission('admin'))
+    model = profileReadeMore
+    template_name= 'Profiles/prof_ReadMore.html'
+    login_url = 'login2'
+
+    def get_queryset(self, *args, **kwargs):
+        #self.CheckUserPermission()
+        qs = super(ProfileReadMoreListView, self).get_queryset(*args, **kwargs)
+        if 'username' in self.kwargs:           
+            qs =qs.filter(profile__user__username=self.kwargs['username'])
+        else:                       
+            qs = qs.filter(profile=self.request.user.profile)            
+        return qs
+
 @login_required(login_url='login2')
 def frontpage(request, username=None):
-     
     profile = User.objects.get(username=username).profile    
     profileReadMore = profile.profileRM.all()
     profileGoodAt = profile.profileRM.all().filter(section_type='GoodAt')
@@ -85,3 +122,4 @@ def index(request):
     return render(request, 'Profiles/index.html', {
         'profiles':profiles
     })
+

@@ -1,6 +1,7 @@
+from dataclasses import fields
 from contactforms.models import Contact
 from django import forms
-from . models import Profile, CustomContact
+from . models import Profile, CustomContact, profileReadeMore
 from django.contrib.auth.models import User
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
@@ -31,7 +32,10 @@ class ProfileForm(forms.ModelForm):
             }),
         }
     
-
+class ProfileReadMoreForm(forms.ModelForm):
+    class Meta:
+        model = profileReadeMore
+        fields = ('title', 'description', 'section_type', 'left_rigth', 'image',)
 class CustomContactForm(forms.ModelForm):
     class Meta:
         model = CustomContact
