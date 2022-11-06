@@ -2,6 +2,7 @@ from django.http import Http404
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.models import Group,User, Permission
 from django.contrib.contenttypes.models import ContentType
+from django.apps import apps
 
 def check_user_able_to_see_page(*groups):
     #print('groupssss',groups)
@@ -15,6 +16,16 @@ def check_user_able_to_see_page(*groups):
             raise PermissionDenied
         return wrapper
 
+    return decorator
+
+def sameUserMixin(app,model):
+    def decorator(function):
+        def wrapper(request, *args, **kwargs):
+            obj = apps.get_model(app, model).objects.get(id=request.GET.get('oid',''))        
+            if request.user==obj.profile.user:
+                return function(request, *args, **kwargs)
+            raise PermissionDenied
+        return wrapper
     return decorator
 
 

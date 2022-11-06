@@ -33,9 +33,15 @@ class ProfileForm(forms.ModelForm):
         }
     
 class ProfileReadMoreForm(forms.ModelForm):
+    id = forms.IntegerField(widget=forms.HiddenInput)
+    class Meta:
+        model = profileReadeMore
+        fields = ('id','title', 'description', 'section_type', 'left_rigth', 'image',)
+class ProfileReadMore_AddForm(forms.ModelForm):
     class Meta:
         model = profileReadeMore
         fields = ('title', 'description', 'section_type', 'left_rigth', 'image',)
+
 class CustomContactForm(forms.ModelForm):
     class Meta:
         model = CustomContact

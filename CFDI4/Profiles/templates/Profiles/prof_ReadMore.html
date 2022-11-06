@@ -1,9 +1,146 @@
-{% for obj in object_list %}
-  {{obj.profile}} <br>
-  {{obj.title}}<br>
-  {{obj.id}}<br>
+{% extends "Profiles/base_edit_section.html" %}
+
+{% block titlePage %} Read more section detail{% endblock titlePage %}
+{% block content %}
+
+<div class="">
+  {% include "Profiles/partials/messages.html" %}
+</div>
+
+<div>
+  <button type="button" 
+  onclick="Adddata(event)"  
+  data-toggle="modal" 
+  data-target="#exampleModalCenter" 
+  class="btn btn-outline-primary btn-lg btn-block">Add</button>
+  {% include 'Profiles/partials/add_modal.html' %}
+</div>
+
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">        
+        <input id="table_title" name="title" value="True" type="checkbox" class="form-check-input" >
+        title
+      </th>
+      <th scope="col">
+        <input id="table_description" name="description" value="True" type="checkbox" class="form-check-input" >
+        description
+      </th>
+      <th scope="col">actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for obj in object_list %}
+      <tr>
+        <th scope="row">{{obj.id}}</th>
+        <td>{{obj.title}}</td>
+        <td>{{obj.description}}</td>
+        <td>
+          {% if obj.profile.user == request.user %}
+            <button type="button" onclick="getdata(event,'{{obj.id}}')"  data-toggle="modal" data-target="#exampleModalCenter{{obj.id}}" class="btn btn-info">edit</button>            
+            {% include 'Profiles/modalActions.html' %}
+          {% endif %}
+        </td>
+      </tr>      
+    {% endfor %}    
+  </tbody>
+</table>
+{% endblock content %}
+
+
+{% block scripts %}
+  <script>
+    function Adddata(event){
+        
+    }
+
+
+
+    function getdata(event, id){
+      let url = `{% url 'readmore_edit_view' %}`
+      url += `?oid=${String(id)}`
+      
+      fetch(url,{
+        method: 'GET',
+        headers:{
+          'Content-Type': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest',
+          //'X-CSRFToken': '{{csrf_token}}'
+        }
+      })
+      .then((response)=>{
+        return response.json()
+      })
+      .then((result)=>{        
+        //console.log('res: ',result)
+        fillForm(result['readMore'])    
+      })
+      .catch((error)=>{
+        console.error(error.error)
+      })      
+    }
+
+    function fillForm(obj)
+    {
+
+      document.getElementById(`{{form.title.name}} ${obj.id}`).value = obj.title
+      document.getElementById(`{{form.description.name}} ${obj.id}`).value = obj.description
+      document.getElementById(`{{form.section_type.name}} ${obj.id}`).value=obj.section_type
+      document.getElementById(`{{form.left_rigth.name}} ${obj.id}`).value=obj.left_rigth
+      //document.getElementById(`{{form.image.name}} ${obj.id}`).value=obj.image
+      document.getElementById(`{{form.id.name}} ${obj.id}`).value=obj.id
+    }
+    /*
+    document.getElementById('id_submit').addEventListener('click',(event)=>{
+      //event.preventDefault()
+      //alert('jajajasj')
+    })*/
+
+    window.addEventListener('load', (event) => {
+      setTimeout(()=>{
+        //console.log('page is fully loaded');
+        let ale = document.getElementsByClassName("alert")
+        if(ale.length> 0 )
+        {
+          $(ale).alert('close')
+          $(ale).alert('dispose')
+        }
+      },3000)
+      
+    });
+
+
+    let table_title =document.getElementById('table_title')
+    let table_desc = document.getElementById('table_description')
+
+    table_title.addEventListener('click',(event)=>{
+      if(table_title.checked){
+        document.getElementById('title').checked=true
+      }
+      else{
+        document.getElementById('title').checked=false
+      }
+    })
+    
+    table_desc.addEventListener('click',(event)=>
+    {
+      if(table_desc.checked)
+      {
+        
+        document.getElementById('description').checked=true
+      }else{
+
+        document.getElementById('description').checked=false
+      }
+    })
+
+    
+
+  </script>
+
+
+{% endblock scripts %}
   
-  {% if obj.profile.user == request.user %}
-    <button>edit</button>
-  {% endif %}
-{% endfor %}

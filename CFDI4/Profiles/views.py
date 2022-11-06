@@ -1,20 +1,19 @@
-
-from CFDI4.GroupValidator import check_user_able_to_see_page
+from django.db.models import Q
+from CFDI4.GroupValidator import check_user_able_to_see_page, sameUserMixin
 from django.shortcuts import render, redirect
 from django.views import View
 from django.views.generic import ListView
-
-from . forms import ProfileForm,UserForm, CustomContactForm, ProfileReadMoreForm
+from . forms import ProfileForm,UserForm, CustomContactForm, ProfileReadMoreForm,ProfileReadMore_AddForm
 from . models import Profile, Technology_type, profileReadeMore
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import PermissionRequiredMixin,LoginRequiredMixin
-
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.contrib.auth.models import Group,User, Permission
+from django.contrib.auth.models import Group,User
 from django.contrib.contenttypes.models import ContentType
 from django.utils.decorators import method_decorator
-
+from django.http import JsonResponse
+from django.http import Http404
 
 
 class ProfileView(LoginRequiredMixin, View):
@@ -62,6 +61,37 @@ class ProfileView(LoginRequiredMixin, View):
         })
 
 
+class ProfileReadMoreEditView(LoginRequiredMixin, View):
+    form_class = ProfileReadMoreForm
+    @method_decorator(sameUserMixin('Profiles','profileReadeMore'))    
+    def get(self, request, *args, **kwargs):    
+        if request.is_ajax and request.headers.get('X-Requested-With') == 'XMLHttpRequest':            
+            oid = request.GET.get('oid', '')
+            try:            
+                readMore = profileReadeMore.objects.values().get(id=oid)
+                return JsonResponse({'readMore':readMore}, status=200)
+            except:
+                readMore = {'error':'No encontrado'}            
+                return JsonResponse(readMore, status=404)
+        else: # cancel the GET method call none ajax            
+            raise Http404("None Ajax call")
+    
+    def post(self, request, *args, **kwargs):
+        if request.POST['id']!='':
+            rm = profileReadeMore.objects.get(id=request.POST['id'])
+            form = self.form_class(request.POST, request.FILES, instance=rm)
+        else:
+            form = ProfileReadMore_AddForm(request.POST, request.FILES)
+            form.instance.profile_id=request.user.id
+        
+        if form.is_valid():
+            form.save()
+            messages.add_message(request, messages.INFO, 'Section updated successfully!')
+        else:
+            messages.add_message(request, messages.ERROR, f'{form.errors}')
+        return redirect('readmore_view')
+        
+
 #@method_decorator(check_user_able_to_see_page('mirones'),name='dispatch')
 class ProfileReadMoreListView(
     PermissionRequiredMixin,
@@ -78,14 +108,33 @@ class ProfileReadMoreListView(
     model = profileReadeMore
     template_name= 'Profiles/prof_ReadMore.html'
     login_url = 'login2'
+    def get_context_data(self, **kwargs):
+        context = super(ProfileReadMoreListView, self).get_context_data(**kwargs)
+        #adding form to the context listview for edit in modal in ProfileReadMoreEditView call
+        context['form']= ProfileReadMoreForm()
+        return context
 
-    def get_queryset(self, *args, **kwargs):
+
+    def get_queryset(self,*args, **kwargs):
         #self.CheckUserPermission()
+        search      =self.request.GET.get('search', '')
+        description =self.request.GET.get('description',False)
+        title       =self.request.GET.get('title',False)
+        #print(search, description, title)
+        
         qs = super(ProfileReadMoreListView, self).get_queryset(*args, **kwargs)
         if 'username' in self.kwargs:           
             qs =qs.filter(profile__user__username=self.kwargs['username'])
         else:                       
-            qs = qs.filter(profile=self.request.user.profile)            
+            qs = qs.filter(profile=self.request.user.profile)
+
+        if search or (description or title):    
+            qs = qs.filter(Q(description__icontains=search)|Q(title__icontains=search))
+        if title and not description:
+            qs = qs.filter(Q(title__icontains=search))
+        if not title and description:
+            qs = qs.filter(Q(description__icontains=search))
+        
         return qs
 
 @login_required(login_url='login2')
