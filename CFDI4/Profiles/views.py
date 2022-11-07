@@ -98,17 +98,17 @@ class ProfileReadMore_Delete_View(LoginRequiredMixin, DeleteView):
 
 #@method_decorator(check_user_able_to_see_page('mirones'),name='dispatch')
 class ProfileReadMoreListView(
-    PermissionRequiredMixin,
+    #PermissionRequiredMixin,
     LoginRequiredMixin, ListView):
 
-    def CheckUserPermission(group):
-        permissions=[]
-        for x in Group.objects.get(name=group).permissions.all():
-            app=ContentType.objects.get(id=x.content_type_id)
-            permissions.append(f'{app.app_label}.{x.codename}')
-        return permissions
+    # def CheckUserPermission(group):
+    #     permissions=[]
+    #     for x in Group.objects.get(name=group).permissions.all():
+    #         app=ContentType.objects.get(id=x.content_type_id)
+    #         permissions.append(f'{app.app_label}.{x.codename}')
+    #     return permissions
     
-    permission_required = (CheckUserPermission('admin'))
+    # permission_required = (CheckUserPermission('admin'))
     
     paginate_by = 10
     model = profileReadeMore
