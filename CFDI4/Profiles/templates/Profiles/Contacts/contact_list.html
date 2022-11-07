@@ -1,0 +1,66 @@
+{% extends "Profiles/base_edit_section.html" %}
+
+{% block titlePage %} Contact List{% endblock titlePage %}
+
+
+{% block content %}
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">        
+          <input id="table_name" name="name" value="True" type="checkbox" class="form-check-input" >
+          name
+        </th>
+        <th scope="col">
+          <input id="table_email" name="email" value="True" type="checkbox" class="form-check-input" >
+          email
+        </th>
+        <th scope="col">
+          Date
+        </th>
+        <th scope="col">actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for obj in object_list %}
+        <tr class="{% if obj.is_readed %}table-success{% endif %}">
+            <th scope="row">{{obj.id}}</th>
+            <td>{{obj.name}}</td>
+            <td>{{obj.email}}</td>
+            <td>{{obj.created}}</td>
+
+            <td>
+                {% if obj.contact_to_user.user == request.user %}
+                <button type="button" onclick="addData(event,'{{obj.id}}')"  data-toggle="modal" data-target="#exampleModalCenter{{obj.id}}" class="btn btn-info">View</button>
+                {% include 'Profiles/Contacts/modal_view.html' %}
+                {% endif %}
+            </td>
+        </tr>
+      {% endfor %}    
+    </tbody>
+</table>
+{% endblock content %}
+
+
+
+{% block scripts %}
+<script>
+    function addData(eve,id){
+        document.getElementById(`{{form.id.name}} ${id}`).value=id
+    }
+
+    let table_name  = document.getElementById('table_name')
+    let table_email = document.getElementById('table_email')
+    table_name.addEventListener('click',(event)=>{      
+      document.getElementById('name').checked=table_name.checked ? true : false      
+    })
+
+    table_email.addEventListener('click',(event)=>{      
+        document.getElementById('email').checked=table_email.checked ? true : false      
+    })
+
+
+</script>
+{% endblock scripts %}
+    

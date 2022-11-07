@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'contactforms',
 
     'Cats',
+    'Config',
     'Facturas',
     'Profiles',
 ]

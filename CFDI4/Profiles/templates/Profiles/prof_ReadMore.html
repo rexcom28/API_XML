@@ -2,11 +2,6 @@
 
 {% block titlePage %} Read more section detail{% endblock titlePage %}
 {% block content %}
-
-<div class="">
-  {% include "Profiles/partials/messages.html" %}
-</div>
-
 <div>
   <button type="button" 
   onclick="Adddata(event)"  
@@ -15,7 +10,6 @@
   class="btn btn-outline-primary btn-lg btn-block">Add</button>
   {% include 'Profiles/partials/add_modal.html' %}
 </div>
-
 
 <table class="table">
   <thead>
@@ -40,8 +34,15 @@
         <td>{{obj.description}}</td>
         <td>
           {% if obj.profile.user == request.user %}
-            <button type="button" onclick="getdata(event,'{{obj.id}}')"  data-toggle="modal" data-target="#exampleModalCenter{{obj.id}}" class="btn btn-info">edit</button>            
+            <button type="button" onclick="getdata(event,'{{obj.id}}')"  data-toggle="modal" data-target="#exampleModalCenter{{obj.id}}" class="btn btn-info">Edit</button>            
             {% include 'Profiles/modalActions.html' %}
+
+            <button type="button" onclick="deleteData(event,'{{obj.id}}')"  data-toggle="modal" data-target="#delete_exampleModalCenter{{obj.id}}" class="btn btn-danger">Delete</button>
+            {% include 'Profiles/Partials/modal_del_base.html' %}
+
+            
+            
+
           {% endif %}
         </td>
       </tr>      
@@ -53,7 +54,7 @@
 
 {% block scripts %}
   <script>
-    function Adddata(event){
+    function deleteData(event,id){
         
     }
 
@@ -99,42 +100,18 @@
       //alert('jajajasj')
     })*/
 
-    window.addEventListener('load', (event) => {
-      setTimeout(()=>{
-        //console.log('page is fully loaded');
-        let ale = document.getElementsByClassName("alert")
-        if(ale.length> 0 )
-        {
-          $(ale).alert('close')
-          $(ale).alert('dispose')
-        }
-      },3000)
-      
-    });
+
 
 
     let table_title =document.getElementById('table_title')
     let table_desc = document.getElementById('table_description')
 
-    table_title.addEventListener('click',(event)=>{
-      if(table_title.checked){
-        document.getElementById('title').checked=true
-      }
-      else{
-        document.getElementById('title').checked=false
-      }
+    table_title.addEventListener('click',(event)=>{      
+      document.getElementById('title').checked=table_title.checked ? true : false      
     })
     
-    table_desc.addEventListener('click',(event)=>
-    {
-      if(table_desc.checked)
-      {
-        
-        document.getElementById('description').checked=true
-      }else{
-
-        document.getElementById('description').checked=false
-      }
+    table_desc.addEventListener('click',(event)=>{      
+      document.getElementById('description').checked=table_desc.checked ? true : false      
     })
 
     

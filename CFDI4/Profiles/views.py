@@ -2,9 +2,10 @@ from django.db.models import Q
 from CFDI4.GroupValidator import check_user_able_to_see_page, sameUserMixin
 from django.shortcuts import render, redirect
 from django.views import View
+from django.views.generic.edit import DeleteView
 from django.views.generic import ListView
-from . forms import ProfileForm,UserForm, CustomContactForm, ProfileReadMoreForm,ProfileReadMore_AddForm
-from . models import Profile, Technology_type, profileReadeMore
+from . forms import ProfileForm,UserForm, CustomContactForm, ProfileReadMoreForm,ProfileReadMore_AddForm, CustomContactForm_isRead
+from . models import Profile, Technology_type, profileReadeMore, CustomContact
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import PermissionRequiredMixin,LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
@@ -91,6 +92,9 @@ class ProfileReadMoreEditView(LoginRequiredMixin, View):
             messages.add_message(request, messages.ERROR, f'{form.errors}')
         return redirect('readmore_view')
         
+class ProfileReadMore_Delete_View(LoginRequiredMixin, DeleteView):
+    model = profileReadeMore
+    success_url='/readMore/'
 
 #@method_decorator(check_user_able_to_see_page('mirones'),name='dispatch')
 class ProfileReadMoreListView(
@@ -105,6 +109,8 @@ class ProfileReadMoreListView(
         return permissions
     
     permission_required = (CheckUserPermission('admin'))
+    
+    paginate_by = 10
     model = profileReadeMore
     template_name= 'Profiles/prof_ReadMore.html'
     login_url = 'login2'
@@ -114,9 +120,8 @@ class ProfileReadMoreListView(
         context['form']= ProfileReadMoreForm()
         return context
 
-
     def get_queryset(self,*args, **kwargs):
-        #self.CheckUserPermission()
+        
         search      =self.request.GET.get('search', '')
         description =self.request.GET.get('description',False)
         title       =self.request.GET.get('title',False)
@@ -128,12 +133,53 @@ class ProfileReadMoreListView(
         else:                       
             qs = qs.filter(profile=self.request.user.profile)
 
-        if search or (description or title):    
+        if search or (description or title):
             qs = qs.filter(Q(description__icontains=search)|Q(title__icontains=search))
         if title and not description:
             qs = qs.filter(Q(title__icontains=search))
         if not title and description:
             qs = qs.filter(Q(description__icontains=search))
+        
+        return qs
+
+
+class Contact_is_readed_view(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        ins = CustomContact.objects.get(id=request.POST['id'])
+        form = CustomContactForm_isRead(request.POST, instance=ins)        
+        if form.is_valid():
+            form.instance.is_readed=True
+            form.contact_to_user_id=request.user.id
+            form.save()
+            messages.add_message(request, messages.INFO, 'message  readed!')
+        else:
+            messages.add_message(request, messages.ERROR, f'{form.errors}')
+
+        return redirect('contact_list_view')
+
+class Contact_ListView(LoginRequiredMixin, ListView):
+    paginate_by = 10
+    model = CustomContact
+    template_name = 'Profiles/Contacts/contact_list.html'
+    login_url='login2'
+    def get_context_data(self,*args,**kwargs):
+        context = super(Contact_ListView, self).get_context_data(*args, **kwargs)
+        context['form']= CustomContactForm_isRead()
+        return context
+    def get_queryset(self,*args, **kwargs):
+        search      =self.request.GET.get('search', '')
+        name        =self.request.GET.get('name', False)
+        email       =self.request.GET.get('email', False)
+        print(search,name,email)
+        qs = super(Contact_ListView, self).get_queryset(*args, **kwargs)
+        qs = qs.filter(contact_to_user_id=self.request.user.id) 
+
+        if search or (name or email) :
+            qs = qs.filter(Q(name__icontains=search)|Q(email__icontains=search))
+        if name and not email:
+            qs = qs.filter(Q(name__icontains=search))
+        if not name and email:
+            qs = qs.filter(Q(name__icontains=search))
         
         return qs
 

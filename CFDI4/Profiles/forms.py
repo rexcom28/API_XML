@@ -42,10 +42,17 @@ class ProfileReadMore_AddForm(forms.ModelForm):
         model = profileReadeMore
         fields = ('title', 'description', 'section_type', 'left_rigth', 'image',)
 
+class CustomContactForm_isRead(forms.ModelForm):
+    id = forms.IntegerField(widget=forms.HiddenInput)
+    is_readed = forms.BooleanField(required=False)
+    class Meta:
+        model = CustomContact
+        exclude = ('created', 'name', 'email', 'subject', 'message', 'contact_to_user')
+        fields =('id','is_readed',)
 class CustomContactForm(forms.ModelForm):
     class Meta:
         model = CustomContact
-        exclude = ('created',)
+        exclude = ('created','is_readed')
         labels = {
             'contact_to_user':(''),
         }

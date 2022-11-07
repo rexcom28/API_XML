@@ -69,14 +69,14 @@ class Technology_type(models.Model):
 
 class profile_work_images(models.Model):
 
-    # def c_tech():
-    #     return [(tech.tech, f'{tech.tech}-{tech.desc}') for tech in Technology_type.objects.all()]
+    def c_tech():
+        return [(tech.tech, f'{tech.tech}-{tech.desc}') for tech in Technology_type.objects.all()]
 
     profile = models.ForeignKey(Profile, related_name='profile_works', on_delete=models.CASCADE)
     image   = models.ImageField()
     title   = models.CharField(max_length=25)
     caption = models.CharField(max_length=25)
-    data_type = models.CharField(max_length=30)#, choices =c_tech())
+    data_type = models.CharField(max_length=30, choices =c_tech())
     desc    = models.CharField(max_length=65, blank=True)
 
 
@@ -88,5 +88,9 @@ class CustomContact(models.Model):
     subject = models.CharField(max_length=200)
     message = models.TextField(blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
+    is_readed  = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['is_readed','-created']
     def __str__(self):
-        return self.contact_to_user.user.username
+        return f'{self.id}   {self.contact_to_user.user.username} {self.name}'

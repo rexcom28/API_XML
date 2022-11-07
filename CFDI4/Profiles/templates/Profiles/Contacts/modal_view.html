@@ -1,0 +1,66 @@
+{% load widget_tweaks %}
+  
+<div class="modal fade bd-example-modal-lg"  id="exampleModalCenter{{obj.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <form id="id_form{{obj.id}}" action="{% url 'contact_is_readed_view' %}" method="post">
+        {% csrf_token %}
+        <div class="modal-content">
+        <div class="modal-header">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col2-md-4 ml-auto">
+                        <small>
+                            <strong>created: {{obj.created}}</strong>
+                        </small>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <p class="form-group">
+                            <h5 class="modal-title" id="exampleModalCenterTitle">
+                                <strong>
+                                    <small><strong>From:</strong></small> {{obj.name}},
+                                    <small>{{obj.email}}</small>
+                                </strong>
+                            </h5>                            
+                        </p>
+                    </div>                    
+                </div>                                                        
+            </div>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+        <div class="modal-body">            
+            <p class="form-group form-control">
+                <strong> <label for="">Subject:</label></strong>
+                {{obj.subject}}
+            </p>
+            <p class="form-group form-control">
+                <strong>
+                    <label for="">Message:</label>
+                </strong>
+                {{obj.message}}
+            </p>
+            <p class="form-group form-control">
+                <strong>
+                {% if obj.is_readed  %}
+                    Readed!
+                {% else %}
+                    Not readed yet!
+                {% endif %}
+                </strong>
+                {% render_field form.is_readed id+=obj.id id+=form.is_readed.name  type="hidden"  %}
+                
+                {% render_field form.id id+=obj.id id+=form.id.name  type="hidden"  %}
+            </p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button id ="id_submit{{obj.id}}" type="submit" class="btn btn-primary">is Readed?</button>        
+        </div>
+        </div>
+    </form>
+  </div>
+</div>

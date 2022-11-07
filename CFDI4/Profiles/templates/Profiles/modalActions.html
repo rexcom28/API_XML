@@ -3,38 +3,34 @@
 {% extends "Profiles/partials/modal_base.html" %}
 {% load widget_tweaks %}
 {% block modal_title %}
-    Edit {{obj.id}}
+    Edit: <strong>{{obj.title}}</strong>
 {% endblock modal_title %}
   
 {% block modal_body %}
   {% csrf_token %}  
-  <div>
+  <div class="form-group">
     <label for="{{form.title.name}}"><strong> {{form.title.label|capfirst}} </strong></label>
     {% render_field form.title id+=obj.id id+=form.title.name  placeholder=form.title.label class="form-control"  type="text" autocomplete="off" %}    
   </div>
-  <div>
+  <div class="form-group">
     <label for="{{form.description.name}}"><strong> {{form.description.label|capfirst}} </strong></label>
-    {% render_field form.description id+=obj.id id+=form.description.name    placeholder=form.description.label class="form-control"   type="text-area" autocomplete="off" %}
+    {% render_field form.description id+=obj.id id+=form.description.name   placeholder=form.description.label class="form-control"  rows=3 type="text-area" autocomplete="off" %}
   </div>
-  <div>
+  <div class="form-group">
     <label for="{{form.section_type.name}}"><strong> {{form.section_type.label|capfirst}} </strong></label>
     {% render_field form.section_type id+=obj.id id+=form.section_type.name    placeholder=form.section_type.label class="form-control"   type="select" autocomplete="off" %}
   </div>
-  <div>
+  <div class="form-group">
     <label for="{{form.left_rigth.name}}"><strong> {{form.left_rigth.label|capfirst}} </strong></label>
     {% render_field form.left_rigth id+=obj.id id+=form.left_rigth.name    placeholder=form.left_rigth.label class="form-control"   type="select" autocomplete="off" %}
   </div>
-  <div>
+  <div class="form-group">
     <label for="{{form.image.name}}"><strong> {{form.image.label|capfirst}} </strong></label>
     {% render_field form.image id+=obj.id id+=form.image.name accept="image/*" class="form-control" type="file"  %}
-    <p>
-      
-      
+    <p>      
       {% if obj.image %}
-        <small> Current image:  <a href="{{obj.image.url}}">{{obj.image}}</a> </small>    
+        <small> Current image:  <a href="{{obj.image.url}}" target="_blank">{{obj.image}}</a> </small>    
       {% endif %}
-        
-      
     </p>
   </div>
   {% render_field form.id id+=obj.id id+=form.id.name  type="hidden"  %}

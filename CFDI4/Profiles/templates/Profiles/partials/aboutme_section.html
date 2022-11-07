@@ -17,8 +17,13 @@
                     <div class="left-image-post">
                         <div class="row">
                         <div class="col-md-6">
-                            <div class="left-image">
-                            <img src="{{readmore.image.url}}" alt="" />
+                            <div class="left-image">                                
+                                
+                                {% if readmore.image %}
+                                    <img src="{{readmore.image.url}}" alt="" />
+                                {% else %}                                
+                                    <img src="https://via.placeholder.com/410x410x.jpg" alt="" />            
+                                {% endif %}                                                                
                             </div>
                         </div>
                         <div class="col-md-6">
