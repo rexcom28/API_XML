@@ -1,84 +1,35 @@
-<!doctype html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" />
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tw-elements/dist/css/index.min.css" />
-        
-        <script src="https://cdn.tailwindcss.com"></script>
-    
-        <script>
-            tailwind.config = {
-                theme: {
-                extend: {
-                    fontFamily: {
-                    sans: ['Inter', 'sans-serif'],
-                    },
-                }
-                }
-            }
-        </script>
-    </head>
-    <body>
-        <h1 class="text-3xl font-bold underline">
-            Profiles list
-        </h1>
-        {% if request.user.is_authenticated %}
-          <a href="{% url 'logout' %}" class="mt-6 inline-block py-4 px-8 bg-red-400 text-white">Log out</a>
-        {% else %}
-          <a href="{% url 'login2' %}" class="mt-6 inline-block py-4 px-8 bg-blue-400 text-white">Log in</a>
-        {% endif %}
-        <div class="flex flex-col">
-            <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
-              <div class="py-4 inline-block min-w-full sm:px-6 lg:px-8">
-                <div class="overflow-hidden">
-                  <table class="min-w-full text-center">
-                    <thead class="border-b bg-gray-800">
-                      <tr>
-                        <th scope="col" class="text-sm font-medium text-white px-6 py-4">
-                          #
-                        </th>
-                        <th scope="col" class="text-sm font-medium text-white px-6 py-4">
-                          Full name
-                        </th>
-                        <th scope="col" class="text-sm font-medium text-white px-6 py-4">
-                          Job Title
-                        </th>
-                        <th scope="col" class="text-sm font-medium text-white px-6 py-4">
-                            Created
-                        </th>
-                      </tr>
-                    </thead class="border-b">
-                    <tbody>
-                        {% for profile in profiles %}
-                            <tr class="bg-white border-b">
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                    {{profile.user.id}}
-                                </td>
-                                <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                    
-                                    <a href="{% url 'frontpage' profile.user.username %}">{{profile.user.get_full_name}}</a>
-                                </td>
-                                <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                    {{profile.job_title}}
-                                </td>
-                                <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                    {{profile.created}}
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-        </div>
-        
-        
-        
-          <script src="https://cdn.jsdelivr.net/npm/tw-elements/dist/js/index.min.js"></script>
-    </body>
-</html>
+{% extends "Profiles/base_edit_section.html" %}
 
+{% block titlePage %} Profiles List{% endblock titlePage %}
+
+
+{% block content %}
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">        
+          <input id="table_title" name="title" value="True" type="checkbox" class="form-check-input" >
+          Full name
+        </th>
+        <th scope="col">
+          <input id="table_desc" name="desc" value="True" type="checkbox" class="form-check-input" >
+          Job Title
+        </th>        
+        <th>Created</th>
+
+      </tr>
+    </thead>
+    <tbody>
+      {% for profile in profiles %}
+        <tr class="">
+            <th scope="row">{{profile.user.id}}</th>
+            <td><a href="{% url 'frontpage' profile.user.username %}">{{profile.user.get_full_name}}</a></td>
+            <td>{{profile.job_title}}</td>
+            <td>{{profile.created}}</td>
+            <td>{{obj.data_type}}</td>            
+        </tr>
+      {% endfor %}    
+    </tbody>
+  </table>
+{% endblock content %}
