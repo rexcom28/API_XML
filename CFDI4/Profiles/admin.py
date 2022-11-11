@@ -14,7 +14,7 @@ from .models import (Profile, profileReadeMore, profile_work_images,
 
 
 class TechnologyAdmin(admin.ModelAdmin):
-    list_display= ['tech']
+    list_display= ['id','tech']
 
 class profileSocialAdmin(admin.ModelAdmin):
     list_display=['profile','social_type', 'url']

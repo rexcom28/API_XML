@@ -1,6 +1,6 @@
 {% extends "Profiles/base_edit_section.html" %}
 
-{% block titlePage %} Read more section detail{% endblock titlePage %}
+{% block titlePage %} Read More & Good At sections details{% endblock titlePage %}
 {% block content %}
 <div>
   <button type="button" 
@@ -38,11 +38,7 @@
             {% include 'Profiles/modalActions.html' %}
 
             <button type="button" onclick="deleteData(event,'{{obj.id}}')"  data-toggle="modal" data-target="#delete_exampleModalCenter{{obj.id}}" class="btn btn-danger">Delete</button>
-            {% include 'Profiles/Partials/modal_del_base.html' %}
-
-            
-            
-
+            {% include 'Profiles/partials/modal_del_base.html' %}
           {% endif %}
         </td>
       </tr>      

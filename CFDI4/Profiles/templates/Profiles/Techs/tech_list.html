@@ -1,0 +1,128 @@
+{% extends "Profiles/base_edit_section.html" %}
+
+{% block titlePage %} Technologies List{% endblock titlePage %}
+
+
+{% block content %}
+    <div>
+        <button type="button" 
+        onclick=""  
+        id="id_add_data"
+        data-toggle="modal" 
+        data-target="#exampleModalCenter" 
+        class="btn btn-outline-primary btn-lg btn-block">Add</button>
+        {% include "Profiles/Techs/add_modal_techs.html" %}
+    </div>
+
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">        
+              <input id="table_tech" name="tech" value="True" type="checkbox" class="form-check-input" >
+              tech
+            </th>
+            <th scope="col">
+              <input id="table_desc" name="desc" value="True" type="checkbox" class="form-check-input" >
+              Description
+            </th>        
+            <th scope="col">actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for obj in object_list %}
+            <tr class="">
+                <th scope="row">{{obj.id}}</th>
+                <td>{{obj.tech}}</td>
+                <td>{{obj.desc}}</td>                
+                <td>                    
+                    <button type="button" 
+                    onclick="AddData(event,'{{obj.id}}')"  
+                    data-toggle="modal" 
+                    data-target="#exampleModalCenter" 
+                    class="btn btn-info">View</button>
+                    
+                    {% comment %}
+                        <button type="button"
+                        data-toggle="modal"
+                        onclick="DeleteData(event,'{{obj.id}}')"
+                        data-target="#delete_exampleModalCenter{{obj.id}}" 
+                        class="btn btn-danger">Delete</button> 
+                        {% include "Profiles/Techs/del_modal_techs.html" %}
+                    {% endcomment%}
+
+                    <button type="button"
+                    data-toggle="modal"
+                    onclick="DeleteData(event,'{{obj.id}}', '{{obj.tech}}')"
+                    data-target="#delete_exampleModalCenter" 
+                    class="btn btn-danger">Delete</button> 
+                </td>
+            </tr>
+          {% endfor %}    
+        </tbody>
+    </table>
+
+    {% include "Profiles/Techs/del_modal_techs2.html" %}
+{% endblock content%}
+
+
+{% block scripts %}
+    <script>
+        let table_tech  = document.getElementById('table_tech')
+        let table_desc  = document.getElementById('table_desc')
+        let techdata = document.getElementById('tech add')
+        let descdata = document.getElementById('desc add')
+        let iddata   = document.getElementById('id add')
+
+        id_add_data.addEventListener('click',(event)=>{
+            
+            techdata.value=''
+            descdata.value=''
+            iddata.value=''
+        })
+        table_tech.addEventListener('click',(event)=>{              
+        document.getElementById('tech').checked=table_tech.checked ? true : false      
+        })
+
+        table_desc.addEventListener('click',(event)=>{      
+            document.getElementById('desc').checked=table_desc.checked ? true : false      
+        })
+        function DeleteData(event,id,text){
+            
+            let url = "{% url 'techs_delete_view' 1234567890 %}"
+            url = url.replace('1234567890',id);
+            document.getElementById("message_del").innerText = `Are you sure that you want to delete "${text}" ?`;
+            document.getElementById("id_form_del").action = url;
+        }
+        function AddData(event, id){
+            
+            let url = `{% url 'techs_edit_view' %}`
+            url +=`?oid=${String(id)}`
+            fetch(url,{
+                method:'GET',
+                headers:{
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',                
+                }
+            })
+            .then((response)=>{
+                return response.json()
+            })
+            .then((result)=>{        
+                
+                techdata.value=''
+                descdata.value=''
+                iddata.value=''
+                techdata.value=result.tech
+                descdata.value=result.desc
+                iddata.value=result.id
+
+            })
+            .catch((error)=>{
+            console.error('errores ',error.error)
+            }) 
+            
+        }
+    </script>
+{% endblock scripts %}
+    

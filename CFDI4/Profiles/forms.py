@@ -1,7 +1,14 @@
 from dataclasses import fields
 from contactforms.models import Contact
 from django import forms
-from . models import Profile, CustomContact, profileReadeMore
+from . models import (
+    Profile, 
+    CustomContact, 
+    profileReadeMore, 
+    Technology_type,
+    profilie_social_media,
+    profile_work_images,
+)    
 from django.contrib.auth.models import User
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
@@ -64,3 +71,37 @@ class CustomContactForm(forms.ModelForm):
             'contact_to_user': forms.Select(attrs={'class': 'input-group-field', 'style':'display:none'}),
 
         }
+
+
+class TechsTypesForm_ADD(forms.ModelForm):
+    id = forms.IntegerField(widget=forms.HiddenInput,required=False)
+    class Meta:
+        model = Technology_type
+        fields = '__all__'
+        labels = {
+            'tech':('Technology'),
+            'desc':('Description'),
+        }
+class TechsTypesForm(forms.ModelForm):
+    id = forms.IntegerField(widget=forms.HiddenInput)
+    class Meta:
+        model = Technology_type
+        fields = '__all__'
+        labels = {
+            'tech':('Technology'),
+            'desc':('Description'),
+        }
+
+class SocialsForm(forms.ModelForm):
+
+    id = forms.IntegerField(widget=forms.HiddenInput,required=False)
+    class Meta:
+        model  = profilie_social_media
+        fields = ('id','social_type', 'url')
+
+class Work_Images_Form(forms.ModelForm):
+    id = forms.IntegerField(widget=forms.HiddenInput,required=False)
+    class Meta:
+        model = profile_work_images
+        fields  = '__all__'
+        exclude =('profile',)

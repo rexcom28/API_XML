@@ -1,0 +1,114 @@
+{% extends "Profiles/base_edit_section.html" %}
+
+{% block titlePage %} Socials List{% endblock titlePage %}
+
+
+{% block content %}
+    <div>
+        <button type="button" 
+        onclick=""  
+        id="id_add_data"
+        data-toggle="modal" 
+        data-target="#exampleModalCenter" 
+        class="btn btn-outline-primary btn-lg btn-block">Add</button>
+        {% include "Profiles/Socials/add_modal_socials.html" %}
+    </div>
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">        
+              <input id="table_social" name="social" value="True" type="checkbox" class="form-check-input" >
+              social
+            </th>
+            <th scope="col">
+              <input id="table_url" name="url" value="True" type="checkbox" class="form-check-input" >
+              Url
+            </th>        
+            <th scope="col">actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for obj in object_list %}
+            <tr class="">
+                <th scope="row">{{obj.id}}</th>
+                <td>{{obj.social_type}}</td>
+                <td>
+                    <a href="{{obj.url}}" target="_blank">{{obj.url}}</a>
+                </td>                
+                <td>                    
+                    <button type="button" 
+                    onclick="AddData(event,'{{obj.id}}')"  
+                    data-toggle="modal" 
+                    data-target="#exampleModalCenter" 
+                    class="btn btn-info">View</button>
+                    
+                    <button type="button"
+                    data-toggle="modal"
+                    onclick="DeleteData(event,'{{obj.id}}', '{{obj.social_type}}')"
+                    data-target="#delete_exampleModalCenter" 
+                    class="btn btn-danger">Delete</button> 
+                </td>
+            </tr>
+          {% endfor %}    
+        </tbody>
+    </table>
+
+    {% include "Profiles/Socials/del_modal_socials.html" %}
+
+{% endblock content %}
+
+
+{% block scripts %}
+    <script>
+
+
+        let social_type = document.getElementById('social_type add')
+        let url_t = document.getElementById('url add')
+        let id_t = document.getElementById('id add')
+        table_social.addEventListener('click',()=>{
+            document.getElementById('social').checked=table_social.checked ? true : false
+        })
+        table_url.addEventListener('click',()=>{
+            document.getElementById('url').checked=table_url.checked ? true : false
+        })
+
+        id_add_data.addEventListener('click',()=>{
+            url_t.value=''
+            social_type.value=''
+        })
+
+        function DeleteData(event, id, social){
+            let url = "{% url 'socials_delete_view' 1234567890 %}"
+            url = url.replace('1234567890',id);
+            document.getElementById("message_del").innerText = `Are you sure that you want to delete "${social}" ?`;
+            document.getElementById("id_form_del").action = url;
+        }
+
+        function AddData(event,id){
+            let url = `{% url 'socials_edit_view' %}`
+            url += `?oid=${String(id)}`
+            fetch(url,{
+                method:'GET',
+                headers:{
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',                
+                }
+            })
+            .then((response)=>{
+                return response.json()
+            })
+            .then((result)=>{        
+                
+                social_type.value= result.social_type
+                url_t.value=result.url
+                id_t.value = result.id
+
+            })
+            .catch((error)=>{
+            console.error('errores ',error.error)
+            })
+        }
+    </script>
+{% endblock scripts %}
+    

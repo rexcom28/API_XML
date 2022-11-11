@@ -40,8 +40,11 @@ class profilie_social_media(models.Model):
         (IN,'Linkedin'),
     )
     profile     = models.ForeignKey(Profile, related_name='profile_social', on_delete=models.CASCADE)
-    social_type = models.CharField(max_length=30, choices = socials)
+    social_type = models.CharField(max_length=30, choices = socials,  unique=True)
     url         = models.URLField(max_length=255, blank=True, null=True)
+    class Meta:
+        ordering = ['social_type']
+        
 class profileReadeMore(models.Model):
     ReadMore    = 'ReadMore'
     GoodAt      = 'GoodAt'
@@ -64,8 +67,11 @@ class profileReadeMore(models.Model):
 
 class Technology_type(models.Model):
     tech = models.CharField(max_length=55, unique=True)
-    desc = models.CharField(max_length=150)
-
+    desc = models.TextField(max_length=150)
+    class Meta:
+        ordering = ['tech']
+    def __str__(self) -> str:
+        return f"{self.id}   {self.tech}"
 
 class profile_work_images(models.Model):
 

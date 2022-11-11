@@ -1,0 +1,128 @@
+{% extends "Profiles/base_edit_section.html" %}
+
+{% block titlePage %} Work Images List{% endblock titlePage %}
+
+
+{% block content %}
+    <div>
+        <button type="button" 
+        onclick=""  
+        id="id_add_data"
+        data-toggle="modal" 
+        data-target="#exampleModalCenter" 
+        class="btn btn-outline-primary btn-lg btn-block">Add</button>
+        {% include "Profiles/WorkImages/add_modal_workimg.html" %}
+    </div>
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">        
+              <input id="table_title" name="title" value="True" type="checkbox" class="form-check-input" >
+              title
+            </th>
+            <th scope="col">
+              <input id="table_desc" name="desc" value="True" type="checkbox" class="form-check-input" >
+              Description
+            </th>        
+            <th>Caption</th>
+            <th>Data type</th>
+            <th scope="col">actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for obj in object_list %}
+            <tr class="">
+                <th scope="row">{{obj.id}}</th>
+                <td>{{obj.title}}</td>
+                <td>{{obj.desc}}</td>
+                <td>{{obj.caption}}</td>
+                <td>{{obj.data_type}}</td>                                
+                <td>                    
+                    <button type="button" 
+                    onclick="AddData(event,'{{obj.id}}')"  
+                    data-toggle="modal" 
+                    data-target="#exampleModalCenter" 
+                    class="btn btn-info">View</button>
+                    
+                    <button type="button"
+                    data-toggle="modal"
+                    onclick="DeleteData(event,'{{obj.id}}', '{{obj.title}}')"
+                    data-target="#delete_exampleModalCenter" 
+                    class="btn btn-danger">Delete</button> 
+                </td>
+            </tr>
+          {% endfor %}    
+        </tbody>
+    </table>
+    {% include "Profiles/WorkImages/del_modal_workimg.html" %}
+{% endblock content %}
+
+{% block scripts %}
+  <script>
+    let id_add     = document.getElementById(`{{form.id.name}} add`)
+    let title_add  = document.getElementById(`{{form.title.name}} add`)
+    let desc_add   = document.getElementById(`{{form.desc.name}} add`)
+    let caption_add= document.getElementById(`{{form.caption.name}} add`)
+    let data_type  = document.getElementById(`{{form.data_type.name}} add`)
+    let img_id_add = document.getElementById('img_id_add')
+
+    let table_title =document.getElementById('table_title')
+    let table_desc = document.getElementById('table_desc')
+
+    table_title.addEventListener('click',(event)=>{      
+      document.getElementById('title').checked=table_title.checked ? true : false      
+    })
+    
+    table_desc.addEventListener('click',(event)=>{      
+      document.getElementById('description').checked=table_desc.checked ? true : false      
+    })
+
+
+    id_add_data.addEventListener('click',()=>{
+        id_add.value = ''
+        title_add.value = ''
+        desc_add.value = ''
+        caption_add.value = ''
+        data_type.value = ''
+        img_id_add.href='#'
+        img_id_add.innerText=''        
+        img_id_add.setAttribute('required', '')
+
+    })
+    function DeleteData(event, id, title){
+        let url = "{% url 'workimages_delete_view' 1234567890 %}"
+        url = url.replace('1234567890',id);
+        document.getElementById("message_del").innerText = `Are you sure that you want to delete "${title}" ?`;
+        document.getElementById("id_form_del").action = url;
+    }
+    function AddData(event,id){
+        let url = `{% url 'workimages_edit_view' %}`
+        url += `?oid=${String(id)}`
+        fetch(url,{
+            method:'GET',
+            headers:{
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',                
+            }
+        })
+        .then((response)=>{
+            return response.json()
+        })
+        .then((result)=>{                        
+            id_add.value =  result.id
+            title_add.value = result.title
+            desc_add.value = result.desc
+            caption_add.value = result.caption
+            data_type.value = result.data_type
+            img_id_add.href="/media/"+result.image
+            img_id_add.innerText=result.image
+            
+            if(result.image.length > 0) document.getElementById('image add').removeAttribute('required')
+        })
+        .catch((error)=>{
+            console.error('errores ',error.error)
+        })
+    }
+  </script>
+{% endblock scripts %}

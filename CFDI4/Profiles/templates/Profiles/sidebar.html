@@ -13,16 +13,16 @@
           <a class="nav-link" href="{% url 'contact_list_view' %}">Contacts</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Socials</a>
+          <a class="nav-link" href="{% url 'socials_view' %}">Socials</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="{% url 'readmore_view' %}">Read More Section</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Tech Types</a>
+          <a class="nav-link" href="{% url 'techs_view' %}">Tech Types</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Work Images</a>
+          <a class="nav-link" href="{% url 'workimages_view' %}">Work Images</a>
         </li>
         {% if request.user.is_superuser %}
           <li class="nav-item">

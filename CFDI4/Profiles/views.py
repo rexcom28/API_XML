@@ -4,8 +4,23 @@ from django.shortcuts import render, redirect
 from django.views import View
 from django.views.generic.edit import DeleteView
 from django.views.generic import ListView
-from . forms import ProfileForm,UserForm, CustomContactForm, ProfileReadMoreForm,ProfileReadMore_AddForm, CustomContactForm_isRead
-from . models import Profile, Technology_type, profileReadeMore, CustomContact
+from . forms import (
+    ProfileForm,UserForm, 
+    CustomContactForm, ProfileReadMoreForm,
+    ProfileReadMore_AddForm, CustomContactForm_isRead,
+    TechsTypesForm_ADD,
+    TechsTypesForm,
+    SocialsForm,
+    Work_Images_Form,
+)
+from . models import (
+    Profile, 
+    Technology_type, 
+    profileReadeMore, 
+    CustomContact,
+    profilie_social_media,
+    profile_work_images,
+)
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import PermissionRequiredMixin,LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
@@ -60,8 +75,6 @@ class ProfileView(LoginRequiredMixin, View):
             'img':img,
             'username':instance_.username
         })
-
-
 class ProfileReadMoreEditView(LoginRequiredMixin, View):
     form_class = ProfileReadMoreForm
     @method_decorator(sameUserMixin('Profiles','profileReadeMore'))    
@@ -142,7 +155,6 @@ class ProfileReadMoreListView(
         
         return qs
 
-
 class Contact_is_readed_view(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         ins = CustomContact.objects.get(id=request.POST['id'])
@@ -162,8 +174,8 @@ class Contact_ListView(LoginRequiredMixin, ListView):
     model = CustomContact
     template_name = 'Profiles/Contacts/contact_list.html'
     login_url='login2'
-    def get_context_data(self,*args,**kwargs):
-        context = super(Contact_ListView, self).get_context_data(*args, **kwargs)
+    def get_context_data(self,**kwargs):
+        context = super(Contact_ListView, self).get_context_data(**kwargs)
         context['form']= CustomContactForm_isRead()
         return context
     def get_queryset(self,*args, **kwargs):
@@ -182,6 +194,198 @@ class Contact_ListView(LoginRequiredMixin, ListView):
             qs = qs.filter(Q(name__icontains=search))
         
         return qs
+
+class Techs_ListView(LoginRequiredMixin, ListView):
+    paginate_by =10
+    model = Technology_type
+    template_name: str = 'Profiles/Techs/tech_list.html'
+    login_url= 'login2'
+    def get_context_data(self, **kwargs):
+        context = super(Techs_ListView, self).get_context_data(**kwargs)
+        context['form'] = TechsTypesForm()
+        return context
+
+    def get_queryset(self,*args, **kwargs):
+        search = self.request.GET.get('search','')
+        tech = self.request.GET.get('tech','')
+        desc = self.request.GET.get('desc',False)
+        
+        qs = super(Techs_ListView, self).get_queryset(*args, **kwargs)
+        if search or (tech or desc):            
+            qs = qs.filter(
+            Q(tech__icontains=search)|
+            Q(desc__icontains=search))
+        if search and tech and not desc:
+            qs = qs.filter(tech__icontains=search)
+        if search and not tech and desc:
+            qs = qs.filter(desc__icontains=search)
+        return qs 
+
+class Techs_Delete_View(LoginRequiredMixin, DeleteView):
+    model = Technology_type
+    success_url='/techs/'
+class Techs_Edit_View(LoginRequiredMixin,View):
+    def get(self, request, *args, **kwargs):          
+        if request.is_ajax and request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            oid = request.GET.get('oid', '')            
+            try:
+                techs = Technology_type.objects.values().get(id=int(oid))
+                return JsonResponse(techs, status=200)
+            except:
+                techs = {'error':'No encontrado'}
+                return JsonResponse(techs, status=404)
+        else:
+            raise Http404("None Ajax call")    
+    def post(self, request, *args, **kwargs):
+        is_added = True if request.POST['id']!='' else False
+        is_added_STR = 'Updated' if request.POST['id']!='' else 'Added'
+        if is_added:
+            instance_ = Technology_type.objects.get(id=int(request.POST['id']))
+            form = TechsTypesForm(request.POST, instance=instance_)
+        else:            
+            form = TechsTypesForm_ADD(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.add_message(request, messages.INFO,
+            f'Tech {is_added_STR} successfully!')
+        else:
+            messages.add_message(request, messages.ERROR, f'{form.errors}')
+        return redirect('techs_view')
+
+class Socials_Delete_View(LoginRequiredMixin, DeleteView):
+    model = profilie_social_media
+    success_url='/socials/'
+class Socials_ListView(LoginRequiredMixin, ListView):
+    paginate_by =10
+    model = profilie_social_media
+    template_name: str = 'Profiles/Socials/social_list.html'
+    login_url= 'login2'
+    def get_context_data(self, **kwargs):
+        context = super(Socials_ListView, self).get_context_data(**kwargs)
+        context['form'] = SocialsForm()
+        return context
+
+    def get_queryset(self,*args, **kwargs):
+        search = self.request.GET.get('search','')
+        social = self.request.GET.get('social','')
+        url = self.request.GET.get('url','')
+
+
+        qs = super(Socials_ListView, self).get_queryset(*args, **kwargs)
+        #qs = qs.filter(profile=self.request.user.profile)
+        if search or (social or url):
+            qs =qs.filter(
+                Q(social_type__icontains=search) |
+                Q(url__icontains=search)
+            )
+        if search and social and not url:
+            qs = qs.filter(Q(social_type__icontains=search))
+        if search and not social and url:
+            qs = qs.filter(Q(url__icontains=search))
+        return qs
+    
+
+class Socials_Edit_View(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        if request.is_ajax and request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            oid = request.GET.get('oid', '')
+            
+            try:
+                socials= profilie_social_media.objects.values().get(id=int(oid))            
+                return JsonResponse(socials, status=200)
+            except:
+                raise JsonResponse({'error':'No encontrado'}, status=404)
+        else:
+            return Http404("None Ajax call")
+    def post(self, request, *args, **kwargs):
+        is_new = (False,'Updated') if request.POST['id'] != '' else (True, 'Added')
+        if is_new[0]==True:
+            form = SocialsForm(request.POST)
+            form.instance.profile= request.user.profile
+        else:
+            instance_ = profilie_social_media.objects.get(id=request.POST['id'])            
+            form =SocialsForm(request.POST, instance=instance_)
+        if form.is_valid():
+            
+            form.save()
+            messages.add_message(request, messages.INFO,
+            f'Social {is_new[1]} successfully!')
+        else:
+            messages.add_message(request, messages.ERROR, 
+            f'{form.errors}')
+        return redirect('socials_view')
+
+class Work_Images_Delete_View(LoginRequiredMixin, DeleteView):
+    model = profile_work_images
+    success_url= '/workimages/'
+
+class Work_Images_List_View(LoginRequiredMixin, ListView):
+    paginate_by=10
+    model = profile_work_images
+    template_name = 'Profiles/WorkImages/workImages_list.html'
+    login_url='login2'
+    def get_context_data(self, **kwargs):
+        context = super(Work_Images_List_View, self).get_context_data(**kwargs)
+        context['form'] = Work_Images_Form()
+        return context
+    
+    def get_queryset(self,*args, **kwargs):
+        
+        search      =self.request.GET.get('search', '')
+        description =self.request.GET.get('description',False)
+        title       =self.request.GET.get('title',False)
+        #print(search, description, title)
+        
+        qs = super(Work_Images_List_View, self).get_queryset(*args, **kwargs)
+        if 'username' in self.kwargs:           
+            qs =qs.filter(profile__user__username=self.kwargs['username'])
+        else:                       
+            qs = qs.filter(profile=self.request.user.profile)
+
+        if search or (description or title):
+            qs = qs.filter(Q(desc__icontains=search)|Q(title__icontains=search))
+        if title and not description:
+            qs = qs.filter(Q(title__icontains=search))
+        if not title and description:
+            qs = qs.filter(Q(desc__icontains=search))
+        
+        return qs
+
+class work_Images_Edit_View(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        if request.is_ajax and request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            oid = request.GET.get('oid', '')
+            
+            try:
+                workimgs= profile_work_images.objects.values().get(id=int(oid))            
+                return JsonResponse(workimgs, status=200)
+            except:
+                raise JsonResponse({'error':'No encontrado'}, status=404)
+        else:
+            return Http404("None Ajax call")
+
+    def post(self, request, *args, **kwargs):
+        is_new = (False,'Updated') if request.POST['id'] != '' else (True, 'Added')
+        if is_new[0]==True:
+            form = Work_Images_Form(request.POST,request.FILES)
+            form.instance.profile= request.user.profile
+        else:
+            instance_ = profile_work_images.objects.get(id=request.POST['id'])
+            form =Work_Images_Form(request.POST, request.FILES, instance=instance_)
+        
+
+        if form.is_valid():
+            form.save()
+            messages.add_message(request, messages.INFO,
+            f'Work Images {is_new[1]} successfully!')
+        else:
+            messages.add_message(request, messages.ERROR, 
+            f'{form.errors}')
+        return redirect('workimages_view')
+
+
+"""----------------------Functions base views"""
+
 
 @login_required(login_url='login2')
 def frontpage(request, username=None):
