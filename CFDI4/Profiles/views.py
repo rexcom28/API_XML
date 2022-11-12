@@ -272,7 +272,7 @@ class Socials_ListView(LoginRequiredMixin, ListView):
 
 
         qs = super(Socials_ListView, self).get_queryset(*args, **kwargs)
-        #qs = qs.filter(profile=self.request.user.profile)
+        qs = qs.filter(profile=self.request.user.profile)
         if search or (social or url):
             qs =qs.filter(
                 Q(social_type__icontains=search) |
@@ -396,9 +396,13 @@ def frontpage(request, username=None):
     profile_work_images = profile.profile_works.all()
     techs = profile_work_images.values('data_type').distinct()
     socials = profile.profile_social.all()    
-    contactForm = CustomContactForm(initial={'contact_to_user':request.user})
+    contactForm = CustomContactForm(initial={
+        'contact_to_user':profile,
+        'email':request.user.email,
+        'name':request.user.get_full_name,
+    })
     if request.method== 'POST':
-        
+        print(request.POST)
         contactForm = CustomContactForm(request.POST)         
         if contactForm.is_valid():
             contactForm.save()
