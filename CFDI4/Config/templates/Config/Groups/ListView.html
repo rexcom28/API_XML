@@ -1,0 +1,38 @@
+{% extends "Profiles/base_edit_section.html" %}
+
+{% block titlePage %} Groups List{% endblock titlePage %}
+
+
+{% block content %}
+<div>
+  <!--a 
+  href="{%url 'add_group' %}"
+  class="btn btn-outline-primary btn-lg btn-block">Add</a-->
+</div>
+
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">        
+          <input id="table_name" name="name" value="True" type="checkbox" class="form-check-input" >
+          name
+        </th>
+        <th scope="col">actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for obj in object_list %}
+        <tr class="">
+            <th scope="row">{{obj.id}}</th>
+            <td>{{obj.name}}</td>
+            <td>              
+                {% if request.user.is_staff %}
+                  <a  href="{% url 'edit_group' obj.id %}" class="btn btn-info">View</a>                  
+                {% endif %}
+            </td>
+        </tr>
+      {% endfor %}    
+    </tbody>
+</table>
+{% endblock content %}

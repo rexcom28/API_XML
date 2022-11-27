@@ -1,0 +1,45 @@
+{% extends "Profiles/base_edit_section.html" %}
+{% load custom_tags %}
+
+{% load crispy_forms_tags %}
+
+
+{% block titlePage %} Add Group {% endblock titlePage %}
+
+
+{% block content %}
+
+<form method="post"> 
+    {% csrf_token %} 
+    {{ form.name|as_crispy_field }}
+    <br>
+    <ul class="nav nav-tabs" id="myTab" role="tablist">        
+        {% num_tabs_edit qs as numTabs %}
+        {% for tab in numTabs %}
+        <li class="nav-item">
+            <a class="nav-link {% if forloop.first %}active{%endif%}" id="pills-{{tab}}-tab" data-toggle="pill" href="#pills-{{tab}}" role="tab" aria-controls="pills-{{tab}}" aria-selected="false">
+                {% tab_name tab %}
+            </a>
+        </li>  
+        {% endfor %}
+    </ul>
+    <div class="tab-content" id="pills-tabContent">
+        {% num_tabs_edit qs as numTabs %}
+        {% for tab1 in numTabs %}
+            <div class="tab-pane {% if forloop.first %}active{% endif %}" id="pills-{{tab1}}" role="tabpanel" aria-labelledby="pills-{{tab1}}">
+                <div class="list-group">
+                    {% num_edit_permissions form.permissions tab1 as fields %}
+                    {% for field in fields%}
+                    <div class="fieldWrapper">
+                        {{ field.errors }}
+                        {{ field.label_tag }} {% trim_field_name field %} 
+                    </div>
+
+                    {% endfor %}
+                </div>                                  
+            </div>            
+        {% endfor %}
+    </div>
+    <input type="submit" value="Save"> 
+</form>
+{% endblock content %}
