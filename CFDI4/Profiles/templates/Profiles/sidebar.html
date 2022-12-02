@@ -29,10 +29,38 @@
             <a class="nav-link" href="/admin" target="_blank">Admin site</a>
           </li>  
         {% endif %}
-        
-        <li class="nav-item">
-          <a class="nav-link disabled" href="#">Disabled</a>
+{% comment %}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Groups
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            
+            {% for app in app_labels %}
+              <a class="dropdown-item" href="{% url 'Group_Add_View' app.app_label %}">{{app.app_label}}</a>
+              <div class="dropdown-divider"></div>
+            {% endfor %}
+
+          </div>
         </li>
+{% endcomment %}
+        <!-- Split dropup button -->
+        <li class="nav-item dropdown">
+          <div class="btn-group">
+            <a href="{% url 'list_group' %}" class="nav-link">Group List</a>
+            <!--separator-->        
+            <a class="btn dropdown-toggle dropdown-toggle-split"data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="sr-only">Toggle Dropdown</span></a>
+            <div class="dropdown-menu">
+              
+              
+              {% for app in app_labels %}
+                <a class="dropdown-item" href="{% url 'Group_Add_View' app.app_label %}">{{app.app_label}}</a>
+                <div class="dropdown-divider"></div>
+              {% endfor %}
+            </div>
+          </div>
+        </li>
+        
       </ul>
       {% include "Profiles/partials/search_form.html" %}
     </div>

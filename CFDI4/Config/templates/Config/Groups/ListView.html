@@ -4,11 +4,6 @@
 
 
 {% block content %}
-<div>
-  <!--a 
-  href="{%url 'add_group' %}"
-  class="btn btn-outline-primary btn-lg btn-block">Add</a-->
-</div>
 
 <table class="table">
     <thead>
@@ -25,10 +20,13 @@
       {% for obj in object_list %}
         <tr class="">
             <th scope="row">{{obj.id}}</th>
-            <td>{{obj.name}}</td>
+            <td>{{obj.name}}</td>       
             <td>              
                 {% if request.user.is_staff %}
-                  <a  href="{% url 'edit_group' obj.id %}" class="btn btn-info">View</a>                  
+                
+                
+                  <a  href="{% url 'edit_group' obj.name obj.pk %}" class="btn btn-info">View</a>
+                
                 {% endif %}
             </td>
         </tr>

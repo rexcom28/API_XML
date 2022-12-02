@@ -2,7 +2,7 @@ from django.db.models import Q
 from CFDI4.GroupValidator import check_user_able_to_see_page, sameUserMixin
 from django.shortcuts import render, redirect
 from django.views import View
-from django.views.generic.edit import DeleteView
+from django.views.generic.edit import DeleteView, CreateView
 from django.views.generic import ListView
 from . forms import (
     ProfileForm,UserForm, 
@@ -284,7 +284,6 @@ class Socials_ListView(LoginRequiredMixin, ListView):
             qs = qs.filter(Q(url__icontains=search))
         return qs
     
-
 class Socials_Edit_View(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         if request.is_ajax and request.headers.get('X-Requested-With') == 'XMLHttpRequest':

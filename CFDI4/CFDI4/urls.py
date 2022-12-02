@@ -30,6 +30,8 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(), name='logout'),
     path('Cats/', include('Cats.urls')),
     path('', include('Profiles.urls')),
+    path('', include('Config.urls')),
+
     path('dj-rest-auth/', include('dj_rest_auth.urls')),
     path('signup/', SignUpView.as_view(), name='signup'),
     

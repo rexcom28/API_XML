@@ -43,4 +43,6 @@ urlpatterns = [
     path('workimages/edit/',work_Images_Edit_View.as_view(), name='workimages_edit_view'),
     path('workimages/delete/<int:pk>/',Work_Images_Delete_View.as_view(), name='workimages_delete_view'),
     
+
+    
 ]
