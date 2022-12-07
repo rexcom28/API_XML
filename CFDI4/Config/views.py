@@ -16,7 +16,7 @@ class Group_Add_View(LoginRequiredMixin, CreateView):
     form_class= GroupForm
     template_name='Config/Groups/edit_Group.html'
     success_url='/list_group'
-     
+    login_url='login2'
     def get_context_data(self, **kwargs):
         context = super(Group_Add_View, self).get_context_data(**kwargs)
         context['qs']= self.kwargs['group']        
@@ -43,6 +43,8 @@ class Group_Edit_View(LoginRequiredMixin, UpdateView):
     form_class= GroupForm
     template_name='Config/Groups/edit_Group.html'
     success_url='/list_group'
+    login_url='login2'
+    
     def get(self, request, *args, **kwargs):
         self.object = Group.objects.get(pk=kwargs['pk'])        
         App= self.object.permissions.all().values('content_type__app_label').first()        

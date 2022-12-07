@@ -30,26 +30,30 @@ from django.contrib.contenttypes.models import ContentType
 from django.utils.decorators import method_decorator
 from django.http import JsonResponse
 from django.http import Http404
-
-
+from django.conf import settings
+from .utils_css import manageStorageCSS
+from Config.forms import CSSConf_Form
+from Config.models import CSSConf
 class ProfileView(LoginRequiredMixin, View):
     form_class      = UserForm
     model           = User
     template_name   = 'Profiles/myProfile.html'
     login_url = 'login2'
     
-    
-
     def get(self, request,*args, **kwargs):
         
-        instance_           = User.objects.get(username=request.user)  
+        instance_           = User.objects.get(username=request.user)
+        
         instance_profile    = Profile.objects.get(user=request.user)
+        config_instance     = CSSConf.objects.get(user=request.user)
         form                = self.form_class(instance=instance_)
         form_profile        = ProfileForm(instance=instance_profile)       
- 
+        config_form         = CSSConf_Form(instance=config_instance)
+
         return render(request, self.template_name, {
             'form': form, 
             'form_profile':form_profile,
+            'config_form':config_form,
             'img':instance_profile.avatar,
             'username':instance_.username
         })
@@ -57,21 +61,32 @@ class ProfileView(LoginRequiredMixin, View):
     def post(self, request,*args, **kwargs):
         instance_           = User.objects.get(username=request.user)
         instance_profile    = Profile.objects.get(user=request.user)
+        config_instance     = CSSConf.objects.get(user=request.user)
         form                = self.form_class(request.POST, request.FILES, instance=instance_)
         form_profile        = ProfileForm(request.POST, request.FILES,instance=instance_profile)
-        img =form_profile.instance.avatar
-        
-        if form.is_valid():            
-            form.save()
+        config_form         = CSSConf_Form(request.POST, request.FILES, instance=config_instance)
             
-            if form_profile.is_valid():
+        
+        if form.is_valid():
+            #form.save()            
+            if form_profile.is_valid(): 
+               pass
+               #form_profile.save()
+            if config_form.is_valid():
                 
-                form_profile.save()
-                messages.add_message(request, messages.INFO, 'Profile info saved!')
-
+                config_form.save()
+            manageStorageCSS(request, config_form.instance)
+            messages.add_message(request, messages.INFO, 'Profile info saved!')
+            return redirect('ProfileView',username=request.user)
+        else:
+            messages.add_message(request, messages.ERROR, f'{form.errors}')
+            messages.add_message(request, messages.ERROR, f'{form_profile.errors}')
+            messages.add_message(request, messages.ERROR, f'{config_form.errors}')
+        img =form_profile.instance.avatar
         return render(request, self.template_name, {
             'form':form, 
             'form_profile':form_profile,
+            'config_form':config_form,
             'img':img,
             'username':instance_.username
         })
@@ -293,7 +308,7 @@ class Socials_Edit_View(LoginRequiredMixin, View):
                 socials= profilie_social_media.objects.values().get(id=int(oid))            
                 return JsonResponse(socials, status=200)
             except:
-                raise JsonResponse({'error':'No encontrado'}, status=404)
+                return JsonResponse({'error':'No encontrado'}, status=404)
         else:
             return Http404("None Ajax call")
     def post(self, request, *args, **kwargs):
@@ -359,7 +374,7 @@ class work_Images_Edit_View(LoginRequiredMixin, View):
                 workimgs= profile_work_images.objects.values().get(id=int(oid))            
                 return JsonResponse(workimgs, status=200)
             except:
-                raise JsonResponse({'error':'No encontrado'}, status=404)
+                return JsonResponse({'error':'No encontrado'}, status=404)
         else:
             return Http404("None Ajax call")
 
@@ -388,6 +403,7 @@ class work_Images_Edit_View(LoginRequiredMixin, View):
 
 @login_required(login_url='login2')
 def frontpage(request, username=None):
+    
     profile = User.objects.get(username=username).profile    
     profileReadMore = profile.profileRM.all()
     profileGoodAt = profile.profileRM.all().filter(section_type='GoodAt')
@@ -415,13 +431,19 @@ def frontpage(request, username=None):
         'techs':techs,
         'socials':socials,
         'contactForm':contactForm,
-        
+        'username':username
     })
+
+
 
 @login_required(login_url='login2')
 def index(request):
+
+
+    
     profiles = Profile.objects.all()    
     return render(request, 'Profiles/index.html', {
-        'profiles':profiles
+        'profiles':profiles,
+        
     })
 

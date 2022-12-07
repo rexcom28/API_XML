@@ -1,7 +1,33 @@
 from django import template
 from django.contrib.auth.models import Permission
 from django.urls import reverse
+import os
+from django.conf import settings
+from django.core.files.storage import FileSystemStorage
+from django.core.files import File
+
+
 register = template.Library()
+
+
+@register.simple_tag
+def exist(user):
+    ruta2 = ['Profiles','assets','css',f'{user}.css']
+    global nfile
+    nfile = settings.STATICFILES_DIRS[0]
+    store  = FileSystemStorage(location=settings.STATICFILES_DIRS[0])
+    for i in ruta2:
+            nfile = os.path.join(nfile,i)
+    if not store.exists(nfile):
+        return True
+    else:
+        return False
+@register.simple_tag
+def userCssFile(user,url):
+    #print(url)
+    #print(user)
+    full = f'/{url}{user}.css'
+    return full
 
 @register.filter
 def modulo(num, val):

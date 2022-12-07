@@ -5,8 +5,6 @@ from django.contrib.auth.models import User
 def user_avatar_directory_path(instance, filename):
     return 'avatars/{0}/{1}'.format(instance.user.username, filename)
 
-
-
 class Profile(models.Model):
 
     user = models.OneToOneField( User, on_delete=models.CASCADE)
@@ -74,7 +72,7 @@ class Technology_type(models.Model):
         return f"{self.id}   {self.tech}"
 
 class profile_work_images(models.Model):
-
+    
     def c_tech():
         return [(tech.tech, f'{tech.tech}-{tech.desc}') for tech in Technology_type.objects.all()]
 
@@ -97,6 +95,7 @@ class CustomContact(models.Model):
     is_readed  = models.BooleanField(default=False)
 
     class Meta:
+        pass
         ordering = ['is_readed','-created']
     def __str__(self):
         return f'{self.id}   {self.contact_to_user.user.username} {self.name}'

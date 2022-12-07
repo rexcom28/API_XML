@@ -1,4 +1,7 @@
+{% load custom_tags %}
 {% load static %}
+
+
 
 {% url 'ProfileView' request.user.username as myprofile %}
 
@@ -25,7 +28,13 @@
     
         <!-- Additional CSS Files -->
         <link rel="stylesheet" href="{% static 'Profiles/assets/css/fontawesome.css' %}" />
-        <link rel="stylesheet" href="{% static 'Profiles/assets/css/templatemo-style.css' %}" />
+        {% exist username as ou %}
+        {% if not ou %}          
+          <link rel="stylesheet" href="{% userCssFile request.user.username 'static/Profiles/assets/css/'  %}" />
+        {% else %}
+          <link rel="stylesheet" href="{% static 'Profiles/assets/css/templatemo-style.css' %}" />
+        {% endif %}
+        
         <link rel="stylesheet" href="{% static 'Profiles/assets/css/owl.css' %}" />
         <link rel="stylesheet" href="{% static 'Profiles/assets/css/lightbox.css' %}" />
         
