@@ -68,12 +68,10 @@ class ProfileView(LoginRequiredMixin, View):
             
         
         if form.is_valid():
-            #form.save()            
+            form.save()            
             if form_profile.is_valid(): 
-               pass
-               #form_profile.save()
+               form_profile.save()
             if config_form.is_valid():
-                
                 config_form.save()
             manageStorageCSS(request, config_form.instance)
             messages.add_message(request, messages.INFO, 'Profile info saved!')

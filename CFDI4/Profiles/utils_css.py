@@ -20,12 +20,10 @@ def openRep(request, nfile,oldStr, newStr,color=False):
         newcssFile.write(data)
     
 def manageStorageCSS(request, instance):
-    
-    
     try:
         ruta= ['Profiles','assets','css','templatemo-style.css']    
         ruta2 = ['Profiles','assets','css',f'{request.user.username}.css']
-        global xfile 
+        global xfile
         global nfile
         global myfile
         xfile  = settings.STATICFILES_DIRS[0]
@@ -34,48 +32,21 @@ def manageStorageCSS(request, instance):
         for i in ruta:
             xfile = os.path.join(xfile, i)
         for i in ruta2:
-            nfile = os.path.join(nfile,i)
-        
-        if not store.exists(nfile):
-            content = store.open(xfile)        
-            store.save(nfile,content=content)
-            content.close()
-        else:
-        
+            nfile = os.path.join(nfile,i)        
+        if store.exists(nfile):
             store.delete(nfile)
-            content = store.open(xfile)
-            store.save(nfile,content=content)
-            content.close()
+        ori = store.open(xfile)
+        store.save(nfile,ori)
+        ori.close()
         
         fondoReplace = '../images/page-bg.jpg'
-        backgrounColorReplace = 'a43f49'
-        
-        
         strFondo = str(instance.fondo.url)
+        backgrounColorReplace = 'a43f49'
         newback = str(instance.backColor)
-
-        openRep(request, nfile,fondoReplace, strFondo)
+        openRep(request, nfile,fondoReplace, strFondo)        
         openRep(request, nfile,backgrounColorReplace, newback,True)
     except:
         pass
-    # image = CSSConf.objects.first()
-    # #check if user already have his own cssFiles
-    # if not store.exists(nfile):
-    #     content = store.open(xfile)
-    #     store.save( nfile,content=content)
-    #     content.close()
-    #     replaceSTR = '../images/page-bg.jpg'
-    # else:       
-        
-    #     replaceSTR = image.fondo.url
-
-    # with open(nfile, 'r') as cssFile:
-    #     data = cssFile.read()
-    # data = data.replace(replaceSTR, os.path.join(request.build_absolute_uri(),image.fondo.url))
-
-    # with open(nfile, 'w') as newcssFile:
-    #     newcssFile.write(data)
-
 
         
         
