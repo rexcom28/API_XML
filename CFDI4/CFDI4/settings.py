@@ -100,7 +100,7 @@ LOGOUT_REDIRECT_URL ='/login2/'
 LOGIN_REDIRECT_URL ='/'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
-DEBUG = True
+DEBUG = False
 if DEBUG:
     DATABASES = {
         'default': {
