@@ -26,7 +26,7 @@ SECRET_KEY = '$@8q38h^d$!$of$931pue6-9bku2g(8_-qic)_ck9wn1q9ksq#'
 
 
 ALLOWED_HOSTS = ['*']
-DEBUG = True
+DEBUG = False
 
 # Application definition
 
