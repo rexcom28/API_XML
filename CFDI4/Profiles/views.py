@@ -30,10 +30,12 @@ from django.contrib.contenttypes.models import ContentType
 from django.utils.decorators import method_decorator
 from django.http import JsonResponse
 from django.http import Http404
-from django.conf import settings
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .utils_css import manageStorageCSS
 from Config.forms import CSSConf_Form
 from Config.models import CSSConf
+
+
 class ProfileView(LoginRequiredMixin, View):
     form_class      = UserForm
     model           = User
@@ -195,7 +197,7 @@ class Contact_ListView(LoginRequiredMixin, ListView):
         search      =self.request.GET.get('search', '')
         name        =self.request.GET.get('name', False)
         email       =self.request.GET.get('email', False)
-        print(search,name,email)
+        
         qs = super(Contact_ListView, self).get_queryset(*args, **kwargs)
         qs = qs.filter(contact_to_user_id=self.request.user.id) 
 
@@ -415,7 +417,7 @@ def frontpage(request, username=None):
         'name':request.user.get_full_name,
     })
     if request.method== 'POST':
-        print(request.POST)
+        
         contactForm = CustomContactForm(request.POST)         
         if contactForm.is_valid():
             contactForm.save()
@@ -436,10 +438,17 @@ def frontpage(request, username=None):
 
 @login_required(login_url='login2')
 def index(request):
-
-
     
-    profiles = Profile.objects.all()    
+    profiles = Profile.objects.all()
+    page = request.GET.get('page',1)
+    paginator = Paginator(profiles,2)
+    try:
+        profiles = paginator.page(page)
+    except PageNotAnInteger:
+        profiles = paginator.page(1)
+    except EmptyPage:
+        profiles = paginator.page(paginator.num_pages)        
+
     return render(request, 'Profiles/index.html', {
         'profiles':profiles,
         

@@ -14,4 +14,5 @@ class CSSConf_Form(forms.ModelForm):
                 "height":"200px",     
                 "required": False,           
             }),
+            'backColor':forms.HiddenInput(),
         }

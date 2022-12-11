@@ -39,7 +39,14 @@
                       </div>
                       <div class="col-md-12">
                         <fieldset>                          
-                            {{config_form}}                                  
+                            {{config_form}} 
+                            
+                            <div >
+                              <label for="head">background color</label>
+                              
+                              <input value="{% if not config_form.backColor.value == '' %}#{{config_form.backColor.value}}{% endif %}" style="width: 100px;" required type="color" id="id_myColor" name="myColor">
+                              
+                            </div>                                 
                         </fieldset>
                       </div>
                     </div>
@@ -55,4 +62,21 @@
 </div>
 
 {% endblock content %}
-        
+
+
+{% block scripts %}
+  <script>
+    
+    id_myColor.addEventListener("input", (event)=>{
+      id_backColor.value=event.target.value.slice(1)
+    });
+    id_myColor.addEventListener("change", watchColorPicker, false);
+
+    function watchColorPicker(event) {
+      id_backColor.value=event.target.value.slice(1)
+      console.log(event.target.value)
+    }
+
+  </script>
+{% endblock scripts %}
+  

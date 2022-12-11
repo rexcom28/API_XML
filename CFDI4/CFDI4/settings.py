@@ -26,7 +26,7 @@ SECRET_KEY = '$@8q38h^d$!$of$931pue6-9bku2g(8_-qic)_ck9wn1q9ksq#'
 
 
 ALLOWED_HOSTS = ['*']
-
+DEBUG = True
 
 # Application definition
 
@@ -100,7 +100,7 @@ LOGOUT_REDIRECT_URL ='/login2/'
 LOGIN_REDIRECT_URL ='/'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
-DEBUG = False
+
 if DEBUG:
     DATABASES = {
         'default': {

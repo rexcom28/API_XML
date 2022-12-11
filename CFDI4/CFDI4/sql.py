@@ -6,8 +6,6 @@ import configparser
 parser = configparser.ConfigParser()
 with open('C:\Aduanasoft\ServiceManager_CTI\myodbfm3.ini', mode='r') as file:
     parser.read_file(file)
-# print(parser.sections())
-
 
 cnxn_str = ("Driver={SQL Server Native Client 11.0};"
             f"Server={parser['FM3ODB']['MSSQLServer']};"
