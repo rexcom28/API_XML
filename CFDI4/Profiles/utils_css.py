@@ -41,10 +41,16 @@ def manageStorageCSS(request, instance):
         
         fondoReplace = '../images/page-bg.jpg'
         strFondo = str(instance.fondo.url)
-        backgrounColorReplace = 'a43f49'
+
+        backgrounColorReplace = '#a43f49'        
         newback = str(instance.backColor)
-        openRep(request, nfile,fondoReplace, strFondo)        
+
+        fontColor = '#fff'
+        newFontColor = str(instance.fontColor) 
+        openRep(request, nfile,fondoReplace, strFondo)
         openRep(request, nfile,backgrounColorReplace, newback,True)
+        openRep(request, nfile,fontColor, newFontColor,True)
+
     except:
         pass
 

@@ -41,12 +41,14 @@
                         <fieldset>                          
                             {{config_form}} 
                             
-                            <div >
-                              <label for="head">background color</label>
-                              
-                              <input value="{% if not config_form.backColor.value == '' %}#{{config_form.backColor.value}}{% endif %}" style="width: 100px;" required type="color" id="id_myColor" name="myColor">
-                              
-                            </div>                                 
+                            <div id="background">
+                              <label for="id_myColor">Background color</label>                              
+                              <input value="{% if not config_form.backColor.value == '' %}{{config_form.backColor.value}}{% endif %}" style="width: 100px;" required type="color" id="id_myColor" name="myColor">                              
+                            </div>
+                            <div id="fontcolor">
+                              <label for="id_fontColor">Font color</label>                              
+                              <input value="{% if not config_form.fontColor.value == '' %}{{config_form.fontColor.value}}{% endif %}" style="width: 100px;" required type="color" id="id_fontColor" name="fontColor">                              
+                            </div>
                         </fieldset>
                       </div>
                     </div>
@@ -68,18 +70,20 @@
   <script>
     
     id_myColor.addEventListener("input", (event)=>{
-      id_backColor.value=event.target.value.slice(1)
+      id_backColor.value=event.target.value//.slice(1)
     });
     id_myColor.addEventListener("change", watchColorPicker, false);
 
     function watchColorPicker(event) {
-      id_backColor.value=event.target.value.slice(1)
-      console.log(event.target.value)
+      id_backColor.value=event.target.value//.slice(1)      
     }
-    window.addEventListener('load',()=>{
-      //location.reload(true);
+    id_fontColor.addEventListener("input", (event)=>{
+      id_fontColor.value=event.target.value
     })
-    
+    id_fontColor.addEventListener("change", watchColorPicker2, false);
+    function watchColorPicker2(evnet){
+      id_fontColor.value=event.target.value
+    }
   </script>
 {% endblock scripts %}
   

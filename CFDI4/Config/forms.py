@@ -5,7 +5,7 @@ class CSSConf_Form(forms.ModelForm):
 
     class Meta:
         model = CSSConf
-        fields = ('user','fondo','backColor',)
+        fields = ('user','fondo','backColor', 'fontColor',)
         widgets ={
             'user': forms.HiddenInput(),
             
@@ -15,4 +15,5 @@ class CSSConf_Form(forms.ModelForm):
                 "required": False,           
             }),
             'backColor':forms.HiddenInput(),
+            'fontColor':forms.HiddenInput(),
         }
